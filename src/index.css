@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root{
+    --mainbgcolor: #fcfcfc;
+    --authfontcolor: #11175d;
+    --mainfontcolor: #000000;
+}
+
+@theme {
+    --color-mainbgcolor: var(--mainbgcolor); 
+    --color-authfontcolor: var(--authfontcolor); 
+    --color-mainfontcolor: var(--mainfontcolor); 
+  }
