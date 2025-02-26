@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import lib from "../lib/lib";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 
+
 const SingUp = () => {
   let data = lib.singUpData();
 
@@ -9,6 +10,7 @@ const SingUp = () => {
   let [fullname, setfullname] = useState("");
   let [password, setpassword] = useState("");
   let [eye, seteye] = useState(false);
+  let [user, setUser] = useState(null)
   //------error state------------
 
   let [emailError, setemailError] = useState("");
@@ -19,13 +21,14 @@ const SingUp = () => {
     let { name, value } = event.target;
     if (name == "email") {
       setemail(value);
-    } else if ((name = "fullname")) {
+    } else if ((name == "fullname")) {
       setfullname(value);
     } else {
       setpassword(value);
+      
     }
   };
-
+  
   // ------------------------------
 
   let handlesingup = () => {
@@ -33,18 +36,15 @@ const SingUp = () => {
       setemailError("Missing Email");
     } else if (!fullname) {
       setfullnameError("Missing Fullname");
-    } else if (!password) {
-      setpasswordError("Missing Password");
     } else {
-      alert("fine");
-    }
-  };
+      setpasswordError("Missing Password");
+    } 
+  }
+  
 
   // ------------------------------
 
-  let handleicon = () => {
-      seteye(!eye)
-  }
+  
 
   return (
     <div>
@@ -71,10 +71,9 @@ const SingUp = () => {
                     name == "email"
                       ? "email"
                       : name == "fullname"
-                      ? "fullname"
+                      ? "text"
                       : name == "password"
-                      ? "password"
-                      : eye ? 'text' : 'password'
+                      && !eye ? 'password': 'text'
                       
                   }
                   placeholder={`write your ${name}`}
@@ -83,8 +82,11 @@ const SingUp = () => {
                   className="border border-gray-500 px-2 py-1 outline-0"
                 />
                 {icon && (
-                  <span className=" absolute right-[5%] top-[60%] translate-[-5%, -60%] cursor-pointer" onClick={handleicon}>
-                    {eye ? <FaRegEye /> : <FaEyeSlash />}
+                  <span
+                    className=" absolute right-[5%] top-[60%] translate-[-5%, -60%] cursor-pointer"
+                    
+                  >
+                    {eye ? <FaRegEye onClick={ ()=> seteye (!eye) } /> : <FaEyeSlash onClick={ ()=> seteye (!eye) } />}
                   </span>
                 )}
                 {email == "" && name == "email" ? (
@@ -113,6 +115,6 @@ const SingUp = () => {
       </div>
     </div>
   );
-};
+}
 
 export default SingUp;
