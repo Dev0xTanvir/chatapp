@@ -1,20 +1,30 @@
 import React, { useState } from "react";
 import lib from "../lib/lib";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
+import auth from "../../Database/FIrebase.config";
+import { ClipLoader, FadeLoader } from "react-spinners";
 
 const SingUp = () => {
   let data = lib.singUpData();
+  let { successtost, errortost, infotost } = lib;
 
   let [email, setemail] = useState("");
   let [fullname, setfullname] = useState("");
   let [password, setpassword] = useState("");
   let [eye, seteye] = useState(false);
-  let [user, setUser] = useState(null);
+  let [loder, setloder] = useState(false);
   //------error state------------
 
   let [emailError, setemailError] = useState("");
   let [fullnameError, setfullnameError] = useState("");
   let [passwordError, setpasswordError] = useState("");
+
+  // ----------------------------------
 
   let handlechange = (event) => {
     let { name, value } = event.target;
@@ -37,8 +47,37 @@ const SingUp = () => {
     } else if (!password) {
       setpasswordError("Missing Password");
     } else {
-      alert("fine");
+      setloder(true);
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          successtost("🦄 Registation successfull!");
+          updateProfile(auth.currentUser, {
+            displayName: fullname,
+            photoURL:
+              "https://images.pexels.com/photos/20566244/pexels-photo-20566244/free-photo-of-portrait-of-a-beautiful-blonde-peeking-from-behind-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
+          })
+            .then(() => {
+              return sendEmailVerification(auth.currentUser);
+            })
+            .then(() => {
+              infotost("🦄 Email send successfull check your email!");
+              setloder(false);
+            });
+        })
+        .catch((err) => {
+          errortost(err.code);
+        }).finally(()=>{
+          setloder(false)
+        })
     }
+  };
+
+  // --------React loader----------
+
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
   };
 
   // ------------------------------
@@ -49,6 +88,7 @@ const SingUp = () => {
         <div className="w-1/2 h-screen flex flex-col justify-center items-center">
           <h1>Get starded with easily register</h1>
           <p>free register and you can enjoy that</p>
+
           <form
             action="#"
             className="mt-7"
@@ -101,12 +141,28 @@ const SingUp = () => {
                 )}
               </div>
             ))}
-            <button
-              onClick={handlesingup}
-              className="py-2 px-2 bg-blue-700 rounded mt-3 text-white cursor-pointer"
-            >
-              Sing Up
-            </button>
+            {loder ? (
+              <button
+                onClick={handlesingup}
+                className="py-2 px-2 bg-blue-700 rounded mt-3 text-white cursor-pointer"
+              >
+                <FadeLoader
+                  color={"#000000"}
+                  loading={loder}
+                  cssOverride={override}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </button>
+            ) : (
+              <button
+                onClick={handlesingup}
+                className="py-2 px-2 bg-blue-700 rounded mt-3 text-white cursor-pointer"
+              >
+                Sing Up
+              </button>
+            )}
           </form>
           <p>
             Already have an account ?<samp>Sing In</samp>
