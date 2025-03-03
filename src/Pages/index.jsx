@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import auth from "../../Database/FIrebase.config";
 import { ClipLoader, FadeLoader } from "react-spinners";
+import regestation from '../assets/Regestation.png'
 
 const SingUp = () => {
   let data = lib.singUpData();
@@ -84,10 +85,10 @@ const SingUp = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center">
+      <div className="flex">
         <div className="w-1/2 h-screen flex flex-col justify-center items-center">
-          <h1>Get starded with easily register</h1>
-          <p>free register and you can enjoy that</p>
+          <h1 className=" font-nonitw font-bold text-[34px] text-[#11175D] ">Get started with easily register</h1>
+          <p className="font-nonitw font-normal text-[20px] text-[#000000]">Free register and you can enjoy it</p>
 
           <form
             action="#"
@@ -99,8 +100,8 @@ const SingUp = () => {
                 className="flex flex-col items-start gap-y-1 mb-3 relative"
                 key={id}
               >
-                <label htmlFor="email">
-                  {`Enter your ${name}`}
+                <label className="font-nonitw font-semibold text-[15px] text-[#11175D]" htmlFor="email">
+                  {` ${name}`}
                   {requared && <span className="text-red-600">*</span>}
                 </label>
                 <input
@@ -113,10 +114,10 @@ const SingUp = () => {
                       ? "password"
                       : "text"
                   }
-                  placeholder={`write your ${name}`}
+                  placeholder={` ${name}`}
                   name={name}
                   onChange={handlechange}
-                  className="border border-gray-500 px-2 py-1 outline-0"
+                  className="w-[368px] h-[70px] border border-[#11175D] px-4 py-1 outline-0 rounded font-nonitw font-semibold text-[20px] text-[#11175D]"
                 />
                 {icon && (
                   <span
@@ -144,7 +145,7 @@ const SingUp = () => {
             {loder ? (
               <button
                 onClick={handlesingup}
-                className="py-2 px-2 bg-blue-700 rounded mt-3 text-white cursor-pointer"
+                className="w-[368px] h-[60px] py-2 px-2 bg-[#5F35F5] rounded-3xl mt-7 text-white font-nonitw font-semibold text-[20px] cursor-pointer"
               >
                 <FadeLoader
                   color={"#000000"}
@@ -158,17 +159,21 @@ const SingUp = () => {
             ) : (
               <button
                 onClick={handlesingup}
-                className="py-2 px-2 bg-blue-700 rounded mt-3 text-white cursor-pointer"
+                className="w-[368px] h-[60px] py-2 px-2 bg-[#5F35F5] rounded-3xl mt-7 text-white font-nonitw font-semibold text-[20px] cursor-pointer"
               >
                 Sing Up
               </button>
             )}
           </form>
-          <p>
-            Already have an account ?<samp>Sing In</samp>
+          <p className="mt-5 font-opensence font-normal text-[13px] text-[#03014C] ">
+            Already have an account ?<samp className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1">Sing In</samp>
           </p>
         </div>
-        <div className="bg-yellow-600 w-1/2 h-screen">Two</div>
+        <div className=" w-1/2 h-screen">
+        <picture>
+          <img src={regestation} alt={regestation} />
+        </picture>
+        </div>
       </div>
     </div>
   );
