@@ -7,10 +7,10 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import auth from "../../Database/FIrebase.config";
-import { ClipLoader, FadeLoader } from "react-spinners";
+import {FadeLoader } from "react-spinners";
 import regestation from '../assets/Regestation.png'
 
-const SingUp = () => {
+const Index = () => {
   let data = lib.singUpData();
   let { successtost, errortost, infotost } = lib;
 
@@ -37,6 +37,9 @@ const SingUp = () => {
       setpassword(value);
     }
   };
+
+  console.log('hi');
+  
 
   // ------------------------------
 
@@ -124,8 +127,8 @@ const SingUp = () => {
                     onClick={() => seteye(!eye)}
                     className={
                       passwordError && password == ""
-                        ? " absolute right-[5%] top-[43%] cursor-pointer"
-                        : " absolute right-[5%] top-[59%]  cursor-pointer"
+                        ? " absolute right-[5%] top-[43%] cursor-pointer text-[22px] text-[#03014C]"
+                        : " absolute right-[5%] top-[59%]  cursor-pointer text-[22px] text-[#03014C]"
                     }
                   >
                     {eye ? <FaRegEye /> : <FaEyeSlash />}
@@ -179,4 +182,4 @@ const SingUp = () => {
   );
 };
 
-export default SingUp;
+export default Index;
