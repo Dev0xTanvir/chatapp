@@ -3,6 +3,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 import singinjpj from '../../assets/Loging.jpg'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Singin = () => {
   let [eye, seteye] = useState(false);
@@ -18,6 +19,12 @@ const Singin = () => {
       [name]: value,
     });
   };
+
+  // ------------------------
+
+  let handlesingin = ()=>{
+    alert('hi')
+  }
 
   return (
     <div>
@@ -74,7 +81,7 @@ const Singin = () => {
                   {eye ? <FaRegEye /> : <FaEyeSlash />}
                 </span>
               </div>
-              <button className="w-full h-[60px] py-2 bg-[#5F35F5] rounded-3xl mt-13 text-white font-nonitw font-semibold text-[20px] cursor-pointer">
+              <button className="w-full h-[60px] py-2 bg-[#5F35F5] rounded-3xl mt-13 text-white font-nonitw font-semibold text-[20px] cursor-pointer" type="button" onClick={handlesingin}>
                 Login to Continue
               </button>
             </form>
