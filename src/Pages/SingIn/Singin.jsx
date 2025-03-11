@@ -2,15 +2,20 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
-import singinjpj from '../../assets/Loging.jpg'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import singinjpj from "../../assets/Loging.jpg";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Singin = () => {
+  let auth = getAuth();
+  const database = getDatabase();
   let [eye, seteye] = useState(false);
   let [singininfo, setsingininfo] = useState({
     email: "",
     password: "",
   });
+
+  // onchange listiner
 
   let handlechange = (event) => {
     let { name, value } = event.target;
@@ -20,10 +25,42 @@ const Singin = () => {
     });
   };
 
-  // ------------------------
+  // handlesingin function
+  /*
+    todo handlelogin function implement
+    params: ({})
+    return: void
+  */
 
-  let handlesingin = ()=>{
-    alert('hi')
+  let handlesingin = () => {
+    let { email, password } = singininfo;
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userinfo) => {
+        console.log(userinfo);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // handlegoogle function
+
+  let handlegoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider).then((result) => {
+        console.log(result);
+        set(ref(database, 'users/' ), {
+          username: 'Tanvir Ahmmed',
+          email: 'tanvir262728@gmail.com',
+          profile_picture : 'imageUrl'
+        });
+      
+        
+    }).catch((err) => {
+        console.log(err);
+        
+    })
+ 
   }
 
   return (
@@ -34,7 +71,10 @@ const Singin = () => {
             Login to your account!
           </h1>
           <div className=" py-2 border border-blue-600 rounded-2xl relative">
-            <p className="font-opensence font-semibold text-[14px] text-[#03014C] px-15">
+            <p
+              className="font-opensence font-semibold text-[14px] text-[#03014C] px-15"
+              onClick={handlegoogle}
+            >
               <span className="absolute left-[13%] top-[22%] text-[20px]">
                 <FcGoogle />
               </span>
@@ -42,7 +82,7 @@ const Singin = () => {
             </p>
           </div>
           <div className="mt-5">
-            <form onSubmit={ (e) => e.preventDefault() } action="#">
+            <form onSubmit={(e) => e.preventDefault()} action="#">
               <div className="flex flex-col items-start">
                 <label
                   className="font-opensence font-normal text-[13px] text-[#03014C] mb-1"
@@ -81,7 +121,11 @@ const Singin = () => {
                   {eye ? <FaRegEye /> : <FaEyeSlash />}
                 </span>
               </div>
-              <button className="w-full h-[60px] py-2 bg-[#5F35F5] rounded-3xl mt-13 text-white font-nonitw font-semibold text-[20px] cursor-pointer" type="button" onClick={handlesingin}>
+              <button
+                className="w-full h-[60px] py-2 bg-[#5F35F5] rounded-3xl mt-13 text-white font-nonitw font-semibold text-[20px] cursor-pointer"
+                type="button"
+                onClick={handlesingin}
+              >
                 Login to Continue
               </button>
             </form>
@@ -94,9 +138,9 @@ const Singin = () => {
           </div>
         </div>
         <div className=" w-1/2 h-screen">
-        <picture>
-          <img src={singinjpj} alt={singinjpj} />
-        </picture>
+          <picture>
+            <img src={singinjpj} alt={singinjpj} />
+          </picture>
         </div>
       </div>
     </div>

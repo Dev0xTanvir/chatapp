@@ -1,15 +1,17 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from "react-router";
 import Singin from './Pages/SingIn/Singin';
-import Index from './Pages/Index';
+import Singup from './Pages/Singup';
 const App = () => {
   return (
+    <>
     <BrowserRouter>
     <Routes>
-      <Route path="/index" element={<Index />} />
+      <Route path="/singup" element={<Singup />} />
       <Route path="/singin" element={<Singin />} />
     </Routes>
   </BrowserRouter>
+    </>
   )
 }
 

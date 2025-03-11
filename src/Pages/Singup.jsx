@@ -10,7 +10,7 @@ import auth from "../../Database/FIrebase.config";
 import {FadeLoader } from "react-spinners";
 import regestation from '../assets/Regestation.png'
 
-const Index = () => {
+const Singup = () => {
   let data = lib.singUpData();
   let { successtost, errortost, infotost } = lib;
 
@@ -38,7 +38,6 @@ const Index = () => {
     }
   };
 
-  console.log('hi');
   
 
   // ------------------------------
@@ -182,4 +181,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Singup;

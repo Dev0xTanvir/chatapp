@@ -7,19 +7,19 @@ _ .singUpData = () => {
     let singupitem = [
         {
             id: 1,
-            name: 'Email Address',
+            name: 'email',
             requared: true,
             icon: false,
         },
         {
             id: 2,
-            name: 'Ful name',
+            name: 'fullname',
             requared: true,
             icon: false,
         },
         {
             id: 3,
-            name: 'Password',
+            name: 'password',
             requared: true,
             icon: true,
         },
