@@ -3,8 +3,14 @@ import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 import singinjpj from "../../assets/Loging.jpg";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
+import { Link } from "react-router";
 
 const Singin = () => {
   let auth = getAuth();
@@ -47,21 +53,19 @@ const Singin = () => {
 
   let handlegoogle = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then((result) => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
         console.log(result);
-        set(ref(database, 'users/' ), {
-          username: 'Tanvir Ahmmed',
-          email: 'tanvir262728@gmail.com',
-          profile_picture : 'imageUrl'
+        set(ref(database, "users/"), {
+          username: "Tanvir Ahmmed",
+          email: "tanvir262728@gmail.com",
+          profile_picture: "imageUrl",
         });
-      
-        
-    }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
-        
-    })
- 
-  }
+      });
+  };
 
   return (
     <div>
@@ -131,9 +135,9 @@ const Singin = () => {
             </form>
             <p className="mt-5 font-opensence font-normal text-[13px] text-[#03014C] ">
               Don’t have an account ?
-              <samp className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1">
+              <Link to={"/singup"} className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1">
                 Sing Up
-              </samp>
+              </Link>
             </p>
           </div>
         </div>

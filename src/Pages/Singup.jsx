@@ -7,25 +7,29 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import auth from "../../Database/FIrebase.config";
-import {FadeLoader } from "react-spinners";
-import regestation from '../assets/Regestation.png'
+import { FadeLoader } from "react-spinners";
+import regestation from "../assets/Regestation.png";
+import { Link } from "react-router";
 
 const Singup = () => {
   let data = lib.singUpData();
   let { successtost, errortost, infotost } = lib;
+
+  // ----------normal state----------
 
   let [email, setemail] = useState("");
   let [fullname, setfullname] = useState("");
   let [password, setpassword] = useState("");
   let [eye, seteye] = useState(false);
   let [loder, setloder] = useState(false);
+
   //------error state------------
 
   let [emailError, setemailError] = useState("");
   let [fullnameError, setfullnameError] = useState("");
   let [passwordError, setpasswordError] = useState("");
 
-  // ----------------------------------
+  // onchange listiner---------
 
   let handlechange = (event) => {
     let { name, value } = event.target;
@@ -38,9 +42,12 @@ const Singup = () => {
     }
   };
 
-  
-
-  // ------------------------------
+  // handlesingup function
+  /*
+    todo handlelogin function implement
+    params: ({})
+    return: void
+  */
 
   let handlesingup = () => {
     if (!email) {
@@ -69,9 +76,10 @@ const Singup = () => {
         })
         .catch((err) => {
           errortost(err.code);
-        }).finally(()=>{
-          setloder(false)
         })
+        .finally(() => {
+          setloder(false);
+        });
     }
   };
 
@@ -89,8 +97,12 @@ const Singup = () => {
     <div>
       <div className="flex">
         <div className="w-1/2 h-screen flex flex-col justify-center items-center">
-          <h1 className=" font-nonitw font-bold text-[34px] text-[#11175D] ">Get started with easily register</h1>
-          <p className="font-nonitw font-normal text-[20px] text-[#000000]">Free register and you can enjoy it</p>
+          <h1 className=" font-nonitw font-bold text-[34px] text-[#11175D] ">
+            Get started with easily register
+          </h1>
+          <p className="font-nonitw font-normal text-[20px] text-[#000000]">
+            Free register and you can enjoy it
+          </p>
 
           <form
             action="#"
@@ -102,7 +114,10 @@ const Singup = () => {
                 className="flex flex-col items-start gap-y-1 mb-3 relative"
                 key={id}
               >
-                <label className="font-nonitw font-semibold text-[15px] text-[#11175D]" htmlFor="email">
+                <label
+                  className="font-nonitw font-semibold text-[15px] text-[#11175D]"
+                  htmlFor="email"
+                >
                   {` ${name}`}
                   {requared && <span className="text-red-600">*</span>}
                 </label>
@@ -168,13 +183,16 @@ const Singup = () => {
             )}
           </form>
           <p className="mt-5 font-opensence font-normal text-[13px] text-[#03014C] ">
-            Already have an account ?<samp className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1">Sing In</samp>
+            Already have an account ?
+            <Link to={"/singin"} className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1">
+              Sing In
+            </Link>
           </p>
         </div>
         <div className=" w-1/2 h-screen">
-        <picture>
-          <img src={regestation} alt={regestation} />
-        </picture>
+          <picture>
+            <img src={regestation} alt={regestation} />
+          </picture>
         </div>
       </div>
     </div>
