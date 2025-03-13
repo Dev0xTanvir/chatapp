@@ -1,2 +1,45 @@
+@import "tailwindcss";
+:root{
+    --mainbgcolor: #fcfcfc;
+    --authfontcolor: #11175d;
+    --mainfontcolor: #000000;
+    --nonitw: "Nunito", sans-serif;
+    --opensence: "Open Sans", sans-serif;
+    --popince: "Poppins", sans-serif;
+}
 
+  @theme {
+      --color-mainbgcolor: var(--mainbgcolor); 
+      --color-authfontcolor: var(--authfontcolor); 
+      --color-mainfontcolor: var(--mainfontcolor); 
+    }
 
+  @theme {
+    --font-nonitw: var(--nonitw); 
+    --font-opensence: var(--opensence); 
+    --font-popince: var(--popince); 
+  }
+
+    .active{
+      background-color: white;
+      width: 80%;
+      color: #5F35F5;
+      display: flex;
+      justify-content: center;
+      padding: 7px 0;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      position: relative;
+    }
+
+    .active::after{
+      position: absolute;
+      content: '';
+      top: 0;
+      right: -7px;
+      background-color: #5F35F5;
+      height: 100%;
+      width: 15px;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+    }

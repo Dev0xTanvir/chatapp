@@ -8,14 +8,14 @@ import {
 import { BsChatDots } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import { CgLogOut } from "react-icons/cg";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Sidebar = () => {
-
+  let navigate = useNavigate();
   let navicon = [
     {
       id: 1,
-      path: "/home",
+      path: "/",
       icon: <IoHomeOutline />,
     },
     {
@@ -39,10 +39,13 @@ const Sidebar = () => {
     },
   ];
 
+  // handle function implement
+
   let handlelink = (path = "/") => {
-      console.log(path);
-      
+      navigate(path)
   };
+
+  // catch the parms
 
   return (
     <div>
