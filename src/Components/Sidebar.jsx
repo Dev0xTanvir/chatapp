@@ -8,22 +8,29 @@ import {
 import { BsChatDots } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import { CgLogOut } from "react-icons/cg";
+import { Link } from "react-router";
+
 const Sidebar = () => {
+
   let navicon = [
     {
       id: 1,
+      path: "/home",
       icon: <IoHomeOutline />,
     },
     {
       id: 2,
+      path: "/message",
       icon: <BsChatDots />,
     },
     {
       id: 3,
+      path: "/notification",
       icon: <FaRegBell />,
     },
     {
       id: 4,
+      path: "/setting",
       icon: <IoSettingsOutline />,
     },
     {
@@ -32,11 +39,16 @@ const Sidebar = () => {
     },
   ];
 
+  let handlelink = (path = "/") => {
+      console.log(path);
+      
+  };
+
   return (
     <div>
-      <div className=" w-[10%] bg-[#5F35F5] h-[93vh] rounded-2xl">
-        <div className="flex justify-center">
-          <div className="w-[70px] h-[70px] rounded-full relative cursor-pointer group mt-[38px]">
+      <div className=" w-[150px] bg-[#5F35F5] rounded-3xl h-[100dvh]">
+        <div className="flex justify-center ">
+          <div className="w-[70px] h-[70px] rounded-full relative cursor-pointer group mt-[38px] ">
             <picture>
               <img
                 src={sideimg}
@@ -44,23 +56,31 @@ const Sidebar = () => {
                 className="w-full h-full rounded-full"
               />
             </picture>
-            <span className=" absolute hidden group-hover:block top-[25%] left-[25%] translate-[-25%, -25%] text-white text-[30px] ">
+            <span className=" absolute hidden group-hover:block top-[25%] left-[25%] translate-[-25%, -25%] bg-[#DB0505] text-white text-[30px] ">
               <IoCloudUploadOutline />
             </span>
           </div>
         </div>
         {/* {navigation icon} */}
 
-        <div className="flex flex-col gap-y-14 items-center mt-[78px]">
+        <div className="flex flex-col gap-y-14 items-center mt-[78px] cursor-pointer">
           {navicon?.map((item, index) =>
             navicon.length - 1 == index ? (
-              <span className="text-[45px] mt-5 text-white" key={item.id}>
+              <div
+                className="text-[45px] mt-5 active text-white cursor-pointer"
+                key={item.id}
+                onClick={() => handlelink(item.path)}
+              >
                 {item.icon}
-              </span>
+              </div>
             ) : (
-              <span className="text-[45px] text-white" key={item.id}>
+              <div
+                className="text-[45px] text-white"
+                key={item.id}
+                onClick={() => handlelink(item.path)}
+              >
                 {item.icon}
-              </span>
+              </div>
             )
           )}
         </div>

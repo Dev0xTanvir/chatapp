@@ -1,22 +1,2 @@
-@import "tailwindcss";
 
-:root{
-    --mainbgcolor: #fcfcfc;
-    --authfontcolor: #11175d;
-    --mainfontcolor: #000000;
-    --nonitw: "Nunito", sans-serif;
-    --opensence: "Open Sans", sans-serif;
-    --popince: "Poppins", sans-serif;
-}
 
-@theme {
-    --color-mainbgcolor: var(--mainbgcolor); 
-    --color-authfontcolor: var(--authfontcolor); 
-    --color-mainfontcolor: var(--mainfontcolor); 
-  }
-
-  @theme {
-    --font-nonitw: var(--nonitw); 
-    --font-opensence: var(--opensence); 
-    --font-popince: var(--popince); 
-  }
