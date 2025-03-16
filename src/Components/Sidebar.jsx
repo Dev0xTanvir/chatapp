@@ -42,7 +42,7 @@ const Sidebar = () => {
   // handle function implement
 
   let handlelink = (path = "/") => {
-      navigate(path)
+    navigate(path);
   };
 
   // catch the parms
@@ -70,7 +70,11 @@ const Sidebar = () => {
           {navicon?.map((item, index) =>
             navicon.length - 1 == index ? (
               <div
-                className="text-[45px] mt-5 active text-white cursor-pointer"
+                className={
+                  location.pathname == item.path
+                    ? "text-[45px] mt-5 active text-white cursor-pointer"
+                    : "text-[45px] mt-5 text-white cursor-pointer"
+                }
                 key={item.id}
                 onClick={() => handlelink(item.path)}
               >
@@ -78,7 +82,11 @@ const Sidebar = () => {
               </div>
             ) : (
               <div
-                className="text-[45px] text-white"
+              className={
+                location.pathname == item.path
+                  ? "text-[45px] mt-5 active text-white cursor-pointer"
+                  : "text-[45px] mt-5  text-white cursor-pointer"
+              }
                 key={item.id}
                 onClick={() => handlelink(item.path)}
               >

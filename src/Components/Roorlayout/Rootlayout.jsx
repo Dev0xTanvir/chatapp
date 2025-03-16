@@ -8,7 +8,7 @@ const Rootlayout = () => {
       <div>
       <Sidebar/>
       </div>
-      <div className='w-full h-[100dvh] rounded-3xl bg-yellow-500'>
+      <div className='w-full h-[100dvh] rounded-3xl '>
         <Outlet/>
       </div>
     </div>

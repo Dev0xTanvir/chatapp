@@ -1,7 +1,10 @@
 import React from 'react'
+import Input from '../../Components/CommonComponent/Input'
 const Index = () => {
   return (
-    <div className=' '>This is home page</div>
+    <div className=' w-[30%] '>
+      <Input/>
+    </div>
   )
 }
 
