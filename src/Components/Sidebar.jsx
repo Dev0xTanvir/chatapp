@@ -49,7 +49,7 @@ const Sidebar = () => {
 
   return (
     <div>
-      <div className=" w-[150px] bg-[#5F35F5] rounded-3xl h-[100dvh]">
+      <div className=" w-[150px] bg-[#5F35F5] rounded-3xl h-[115dvh]">
         <div className="flex justify-center ">
           <div className="w-[70px] h-[70px] rounded-full relative cursor-pointer group mt-[38px] ">
             <picture>

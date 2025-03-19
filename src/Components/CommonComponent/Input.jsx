@@ -47,6 +47,7 @@ const Input = () => {
           </div>
         </form>
       </div>
+
       {/* group list */}
       <div className="shadow-2xs bg-white-200">
         <div className="flex justify-between items-center mt-2">
@@ -57,11 +58,13 @@ const Input = () => {
         </div>
         <div className="overflow-y-scroll h-[50vh]">
           {[...new Array(arrayitem)].map((_, index) => (
-            <div className={
-              arrayitem -1 === index
-              ?"flex justify-between items-center mt-3 pb-2"
-              :"flex justify-between items-center mt-3 border-b border-b-gray-700 pb-2"
-            }>
+            <div
+              className={
+                arrayitem - 1 === index
+                  ? "flex justify-between items-center mt-3 pb-2"
+                  : "flex justify-between items-center mt-3 border-b border-b-gray-700 pb-2"
+              }
+            >
               <div>
                 <picture>
                   <img src={homeimg} alt={homeimg} />
