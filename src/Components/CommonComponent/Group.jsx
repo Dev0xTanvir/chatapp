@@ -9,7 +9,7 @@ const Group = () => {
       {/* group list */}
       <div className="shadow-2xs bg-white-200">
         <div className="flex justify-between items-center mt-2">
-          <h1>Groups List</h1>
+          <h1>Groups</h1>
           <span>
             <BsThreeDotsVertical />
           </span>
@@ -36,13 +36,8 @@ const Group = () => {
                   Hi Guys, Wassup!
                 </p>
               </div>
-              <button>
-                <button
-                  type="button"
-                  class="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
-                >
-                  Join
-                </button>
+              <button className="font-medium font-popince text-[10px]">
+              Today, 8:56pm
               </button>
             </div>
           ))}

@@ -9,7 +9,7 @@ const Block = () => {
       {/* block list */}
       <div className="shadow-2xs bg-white-200">
         <div className="flex justify-between items-center mt-2">
-          <h1>Groups List</h1>
+          <h1>Blocked Users</h1>
           <span>
             <BsThreeDotsVertical />
           </span>
@@ -30,10 +30,10 @@ const Block = () => {
               </div>
               <div className="py-3">
                 <h1 className="font-popince font-semibold text-[18px]">
-                  Friends Reunion
+                Raghav
                 </h1>
                 <p className="font-popince font-medium text-[14px]">
-                  Hi Guys, Wassup!
+                Today, 8:56pm
                 </p>
               </div>
               <button>
@@ -41,7 +41,7 @@ const Block = () => {
                   type="button"
                   class="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
                 >
-                  Join
+                  unblock
                 </button>
               </button>
             </div>

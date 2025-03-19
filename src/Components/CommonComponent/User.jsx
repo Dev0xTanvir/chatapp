@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import homeimg from "../../assets/Home1.png";
+import { CgMathPlus } from "react-icons/cg";
 const User = () => {
   let [arrayitem, setarrayitem] = useState(10);
   return (
@@ -9,7 +10,7 @@ const User = () => {
       {/* user list */}
       <div className="shadow-2xs bg-white-200">
         <div className="flex justify-between items-center mt-2">
-          <h1>Groups List</h1>
+          <h1>User List</h1>
           <span>
             <BsThreeDotsVertical />
           </span>
@@ -30,10 +31,10 @@ const User = () => {
               </div>
               <div className="py-3">
                 <h1 className="font-popince font-semibold text-[18px]">
-                  Friends Reunion
+                Raghav
                 </h1>
                 <p className="font-popince font-medium text-[14px]">
-                  Hi Guys, Wassup!
+                Today, 8:56pm
                 </p>
               </div>
               <button>
@@ -41,7 +42,7 @@ const User = () => {
                   type="button"
                   class="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
                 >
-                  Join
+                 <CgMathPlus />
                 </button>
               </button>
             </div>
