@@ -10,11 +10,12 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { getDatabase, ref, set } from "firebase/database";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Singin = () => {
   let auth = getAuth();
-  const database = getDatabase();
+  let database = getDatabase();
+  let navigate = useNavigate()
   let [eye, seteye] = useState(false);
   let [singininfo, setsingininfo] = useState({
     email: "",
@@ -43,6 +44,7 @@ const Singin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userinfo) => {
         console.log(userinfo);
+        navigate('/')
       })
       .catch((err) => {
         console.log(err);

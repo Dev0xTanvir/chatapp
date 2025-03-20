@@ -10,8 +10,10 @@ import auth from "../../Database/FIrebase.config";
 import { FadeLoader } from "react-spinners";
 import regestation from "../assets/Regestation.png";
 import { Link } from "react-router";
+import { getDatabase, push, ref, set } from "firebase/database";
 
 const Singup = () => {
+  let db = getDatabase();
   let data = lib.singUpData();
   let { successtost, errortost, infotost } = lib;
 
@@ -59,7 +61,7 @@ const Singup = () => {
     } else {
       setloder(true);
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
+        .then((userinfo) => {
           successtost("🦄 Registation successfull!");
           updateProfile(auth.currentUser, {
             displayName: fullname,
@@ -67,6 +69,15 @@ const Singup = () => {
               "https://images.pexels.com/photos/20566244/pexels-photo-20566244/free-photo-of-portrait-of-a-beautiful-blonde-peeking-from-behind-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
           })
             .then(() => {
+              let userdb = ref(db, "users/")
+              set(push(userdb), {
+                userid: auth.currentUser.uid,
+                username: auth.currentUser.displayName || name,
+                email: auth.currentUser.email || email,
+                profile_picture:
+                  auth.currentUser.photoURL ||
+                  `https://images.pexels.com/photos/20566244/pexels-photo-20566244/free-photo-of-portrait-of-a-beautiful-blonde-peeking-from-behind-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load`,
+              });
               return sendEmailVerification(auth.currentUser);
             })
             .then(() => {
@@ -184,7 +195,10 @@ const Singup = () => {
           </form>
           <p className="mt-5 font-opensence font-normal text-[13px] text-[#03014C] ">
             Already have an account ?
-            <Link to={"/singin"} className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1">
+            <Link
+              to={"/singin"}
+              className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1"
+            >
               Sing In
             </Link>
           </p>

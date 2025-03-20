@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import sideimg from "../assets/sideber.png.png";
 import {
   IoCloudUploadOutline,
@@ -47,6 +47,53 @@ const Sidebar = () => {
 
   // catch the parms
 
+  useEffect(() => {
+    let script = document.createElement("script");
+    script.src = "https://upload-widget.cloudinary.com/latest/global/all.js";
+    script.acync = true;
+    document.body.appendChild(script);
+  }, []);
+
+  /**
+   * todo: handlepofilepictureuplode function
+   * parms: void
+   *
+   */
+
+  let handlepofilepictureuplode = () => {
+    if(window.cloudinary){
+      cloudinary.openUploadWidget(
+        {
+          cloudName: "dexercysn",
+          uploadPreset: "Tanvir",
+          googleApiKey: "AIzaSyCEpis8a0Od9ZAMF_OQrgaDlKtBFZgoDSU",
+          searchBySites: ["all", "cloudinary.com"],
+          searchByRights: true,
+          sources: [
+            "local",
+            "url",
+            "camera",
+            "dropbox",
+            "shutterstock",
+            "gettyimages",
+            "istock",
+            "unsplash",
+            "image_search",
+          ],
+        },
+        (error, result) => {
+          if (error) {
+            throw new Error("profile picture uplode error");
+          }
+          console.log(result.info.secure_url);
+          
+        }
+      );
+    }else{
+      throw new Error ('upload failed')
+    }
+  };
+
   return (
     <div>
       <div className=" w-[150px] bg-[#5F35F5] rounded-3xl h-[115dvh]">
@@ -59,7 +106,10 @@ const Sidebar = () => {
                 className="w-full h-full rounded-full"
               />
             </picture>
-            <span className=" absolute hidden group-hover:block top-[25%] left-[25%] translate-[-25%, -25%] bg-[#DB0505] text-white text-[30px] ">
+            <span
+              onClick={handlepofilepictureuplode}
+              className=" absolute hidden group-hover:block top-[25%] left-[25%] translate-[-25%, -25%] bg-[#DB0505] text-white text-[30px] "
+            >
               <IoCloudUploadOutline />
             </span>
           </div>
@@ -82,11 +132,11 @@ const Sidebar = () => {
               </div>
             ) : (
               <div
-              className={
-                location.pathname == item.path
-                  ? "text-[45px] mt-5 active text-white cursor-pointer"
-                  : "text-[45px] mt-5  text-white cursor-pointer"
-              }
+                className={
+                  location.pathname == item.path
+                    ? "text-[45px] mt-5 active text-white cursor-pointer"
+                    : "text-[45px] mt-5  text-white cursor-pointer"
+                }
                 key={item.id}
                 onClick={() => handlelink(item.path)}
               >
