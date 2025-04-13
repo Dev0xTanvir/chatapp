@@ -78,6 +78,7 @@ const Singup = () => {
                   auth.currentUser.photoURL ||
                   `https://images.pexels.com/photos/20566244/pexels-photo-20566244/free-photo-of-portrait-of-a-beautiful-blonde-peeking-from-behind-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load`,
               });
+              // send email for autheicate user
               return sendEmailVerification(auth.currentUser);
             })
             .then(() => {

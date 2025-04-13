@@ -9,13 +9,13 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, push } from "firebase/database";
 import { Link, useNavigate } from "react-router";
 
 const Singin = () => {
   let auth = getAuth();
-  let database = getDatabase();
-  let navigate = useNavigate()
+  let db = getDatabase();
+  let navigate = useNavigate();
   let [eye, seteye] = useState(false);
   let [singininfo, setsingininfo] = useState({
     email: "",
@@ -44,7 +44,7 @@ const Singin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userinfo) => {
         console.log(userinfo);
-        navigate('/')
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -58,11 +58,18 @@ const Singin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log(result);
-        set(ref(database, "users/"), {
-          username: "Tanvir Ahmmed",
-          email: "tanvir262728@gmail.com",
-          profile_picture: "imageUrl",
-        });
+        let {user} = result
+        let userdb = ref(db, "users/");
+        set(push(userdb), {
+          userid: user.uid,
+          username: user.displayName || 'Name Missing',
+          email: user.email || 'email Missing',
+          profile_picture:
+            user.photoURL ||
+            `https://images.pexels.com/photos/20566244/pexels-photo-20566244/free-photo-of-portrait-of-a-beautiful-blonde-peeking-from-behind-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load`,
+        }).then(()=>{
+          navigate('/')
+        })
       })
       .catch((err) => {
         console.log(err);
@@ -137,7 +144,10 @@ const Singin = () => {
             </form>
             <p className="mt-5 font-opensence font-normal text-[13px] text-[#03014C] ">
               Don’t have an account ?
-              <Link to={"/singup"} className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1">
+              <Link
+                to={"/singup"}
+                className="font-opensence font-bold text-[13px] text-[#EA6C00] px-1"
+              >
                 Sing Up
               </Link>
             </p>

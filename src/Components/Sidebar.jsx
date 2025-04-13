@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import sideimg from "../assets/sideber.png.png";
 import {
   IoCloudUploadOutline,
@@ -9,9 +9,12 @@ import { BsChatDots } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import { CgLogOut } from "react-icons/cg";
 import { Link, useNavigate } from "react-router";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 const Sidebar = () => {
+  let db = getDatabase();
   let navigate = useNavigate();
+  let [userdata, setuserdata] = useState([])
   let navicon = [
     {
       id: 1,
@@ -60,8 +63,30 @@ const Sidebar = () => {
    *
    */
 
+  /**
+   * fetch data firebase realtime database read & write operatation
+   */
+
+  useEffect(() => {
+    let fetchdata = () => {
+      const usersRef = ref(db, "users/" );
+      onValue(usersRef, (snapshot) => {
+        let userArr = []
+        snapshot.forEach((item) => {
+          userArr.push ({...item.val(), userkey: item.key})
+        })
+        setuserdata (userArr)
+        
+      });
+    };
+    fetchdata();
+  }, []);
+
+  console.log(userdata);
+  
+
   let handlepofilepictureuplode = () => {
-    if(window.cloudinary){
+    if (window.cloudinary) {
       cloudinary.openUploadWidget(
         {
           cloudName: "dexercysn",
@@ -85,12 +110,13 @@ const Sidebar = () => {
           if (error) {
             throw new Error("profile picture uplode error");
           }
-          console.log(result.info.secure_url);
-          
+          if (result.info.secure_url) {
+            console.log(result.info.secure_url);
+          }
         }
       );
-    }else{
-      throw new Error ('upload failed')
+    } else {
+      throw new Error("upload failed");
     }
   };
 
