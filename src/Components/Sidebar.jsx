@@ -82,9 +82,6 @@ const Sidebar = () => {
     fetchdata();
   }, []);
 
-  console.log(userdata);
-  
-
   let handlepofilepictureuplode = () => {
     if (window.cloudinary) {
       cloudinary.openUploadWidget(

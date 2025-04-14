@@ -3,11 +3,11 @@ import React from 'react'
 let auth = getAuth()
 let handlemail = () => {
     if(auth.currentUser.email.split('@')[1].split('.')[0] == 'gmail'){
-        window.open('https://temp-mail.org/en/', '_blank');
+        window.open('https://mail.google.com/mail/u/0/#inbox', '_blank');
     }else if(auth.currentUser.email.split('@')[1].split('.')[0] == 'outlook'){
-        window.open('https://temp-mail.org/en/', '_blank');
+        window.open('https://outlook.live.com/mail/0/', '_blank');
     }else{
-        window.open('https://temp-mail.org/en/', '_blank');
+        window.open('https://outlook.live.com/mail/0/', '_blank');
     }
 }
 
@@ -18,7 +18,7 @@ const Usernotverified = () => {
   <div className="max-w-md w-full space-y-8 text-center">
     <div className="mb-8">
       <h2 className="mt-6 text-6xl font-extrabold text-gray-900 dark:text-gray-100">404</h2>
-      <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">Page not found</p>
+      <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-gray-100">Verified Your Email</p>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Sorry, we couldn't find this person you're looking for.</p>
     </div>
     <div className="mt-8">
@@ -29,7 +29,7 @@ const Usernotverified = () => {
         <svg className="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18m-9-9l9 9-9 9" />
         </svg>
-        Go back email
+        Go Back Mailbox
       </span>
     </div>
   </div>
