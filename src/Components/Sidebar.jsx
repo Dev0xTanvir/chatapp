@@ -9,12 +9,13 @@ import { BsChatDots } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import { CgLogOut } from "react-icons/cg";
 import { Link, useNavigate } from "react-router";
-import { getDatabase, ref, onValue } from "firebase/database";
-
+import { getDatabase, ref, onValue, update } from "firebase/database";
+import { getAuth } from "firebase/auth";
 const Sidebar = () => {
   let db = getDatabase();
   let navigate = useNavigate();
-  let [userdata, setuserdata] = useState([])
+  let auth = getAuth();
+  let [userdata, setuserdata] = useState({});
   let navicon = [
     {
       id: 1,
@@ -69,14 +70,14 @@ const Sidebar = () => {
 
   useEffect(() => {
     let fetchdata = () => {
-      const usersRef = ref(db, "users/" );
+      const usersRef = ref(db, "users/");
       onValue(usersRef, (snapshot) => {
-        let userArr = []
+        let obj = {};
         snapshot.forEach((item) => {
-          userArr.push ({...item.val(), userkey: item.key})
-        })
-        setuserdata (userArr)
-        
+          if (auth.currentUser.uid === item.val().userid)
+            obj = { ...item.val(), userkey: item.key };
+        });
+        setuserdata(obj);
       });
     };
     fetchdata();
@@ -108,7 +109,9 @@ const Sidebar = () => {
             throw new Error("profile picture uplode error");
           }
           if (result.info.secure_url) {
-            console.log(result.info.secure_url);
+            update(ref(db, `users/${userdata.userkey}`), {
+              profile_picture: result.info.secure_url,
+            });
           }
         }
       );
@@ -124,8 +127,8 @@ const Sidebar = () => {
           <div className="w-[70px] h-[70px] rounded-full relative cursor-pointer group mt-[38px] ">
             <picture>
               <img
-                src={sideimg}
-                alt={sideimg}
+                src={userdata?.profile_picture || sideimg}
+                alt={userdata?.profile_picture || sideimg}
                 className="w-full h-full rounded-full"
               />
             </picture>
@@ -137,6 +140,11 @@ const Sidebar = () => {
             </span>
           </div>
         </div>
+
+        <h1 className="flex justify-center font-medium font-nonitw text-white">
+          {userdata?.username || "Tanvir"}
+        </h1>
+
         {/* {navigation icon} */}
 
         <div className="flex flex-col gap-y-14 items-center mt-[78px] cursor-pointer">
