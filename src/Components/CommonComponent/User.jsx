@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import homeimg from "../../assets/Home1.png";
-import { CgMathPlus } from "react-icons/cg";
-import { getDatabase, ref, onValue, off } from "firebase/database";
+import { CgMathMinus, CgMathPlus } from "react-icons/cg";
+import { getDatabase, ref, onValue, off, set, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import lib from "../../lib/lib";
 
 const User = () => {
   const [userupdate, setuserupdate] = useState([]);
+  const [login, setuserlogin] = useState({});
   const [loading, setloading] = useState(false);
   const db = getDatabase();
   const auth = getAuth();
@@ -19,6 +21,8 @@ const User = () => {
       snapshot.forEach((user) => {
         if (auth.currentUser?.uid === user.val().userid) {
           pushuser.push({ ...user.val(), userkey: user.key });
+        } else {
+          setuserlogin({ ...user.val(), userkey: user.key });
         }
       });
       setuserupdate(pushuser);
@@ -30,6 +34,56 @@ const User = () => {
       off(usersRef);
     };
   }, [auth.currentUser?.uid]);
+
+  // user friendrequest function
+
+  let handlefriendrequest = (users) => {
+    set(push(ref(db, "friendrequest/")), {
+      whosendfriendrequestname:
+        login?.username || auth?.currentUser?.displayName,
+      whosendfriendrequestuid: login?.userid || auth?.currentUser?.uid,
+      whosendfriendrequestemail: login?.email || auth?.currentUser?.email,
+      whosendfriendrequestprofile_picture:
+        login?.profile_picture || auth?.currentUser?.photoURL,
+      whosendfriendrequestuserkey: login?.userkey || null,
+      whorecivedfriendrequestname: users?.username || "",
+      whorecivedfriendrequestuid: users?.userid || "",
+      whorecivedfriendrequestemail: users?.email || "",
+      whorecivedfriendrequestprofile_picture: users?.profile_picture || "",
+      whorecivedfriendrequestuserkey: users?.userkey || "",
+      createdAt: lib.gettimenow(),
+    })
+      .then(() => {
+        set(push(ref(db, "friendrequest/")), {
+          notificationMsg: `${
+            login?.username || auth?.currentUser?.displayName
+          } Send a friendrequest ${users?.username}`,
+          createdAt: lib.gettimenow(),
+        });
+      })
+      .then(() => {
+        lib.successtost(
+          `${
+            login?.username || auth?.currentUser?.displayName
+          } Friendrequest Successfully Done ${users?.username}`,
+          "top-center"
+        );
+      })
+      .then(() => {
+        let sendidreceivedid = {
+          id: login?.userid + users?.userid,
+        };
+        localStorage.setItem(
+          "sendfriendrequest",
+          JSON.stringify(sendidreceivedid)
+        );
+      });
+  };
+
+  // get data from local storage
+
+  let sendid = localStorage.getItem("sendfriendrequest");
+  let receivedid = JSON.parse(sendid);
 
   return (
     <div className="px-2">
@@ -97,12 +151,22 @@ const User = () => {
                       {users.email || "missing"}
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
-                  >
-                    <CgMathPlus />
-                  </button>
+                  {login?.userid + users?.userid == receivedid?.id ? (
+                    <button
+                      type="button"
+                      className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
+                    >
+                      <CgMathMinus />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handlefriendrequest(users)}
+                      className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
+                    >
+                      <CgMathPlus />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

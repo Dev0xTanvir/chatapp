@@ -1,3 +1,4 @@
+import moment from "moment";
 import { toast, Bounce } from "react-toastify";
 
 let _ = {};
@@ -27,9 +28,9 @@ _ .singUpData = () => {
     return singupitem
 };
 
-_.successtost = (msg) => {
+_.successtost = (msg = 'success msg mising', position = "top-right") => {
     toast.success(msg, {
-        position: "top-right",
+        position: position,
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: false,
@@ -40,7 +41,7 @@ _.successtost = (msg) => {
         transition: Bounce,
         });
 }
-_.infotost = (msg) => {
+_.infotost = (msg = 'infotost mising') => {
     toast.info(msg, {
         position: "top-center",
         autoClose: 5000,
@@ -53,7 +54,7 @@ _.infotost = (msg) => {
         transition: Bounce,
         });
 }
-_.errortost = (msg) => {
+_.errortost = (msg = 'errortost mising') => {
     toast.error( msg, {
         position: "top-left",
         autoClose: 5000,
@@ -65,6 +66,12 @@ _.errortost = (msg) => {
         theme: "light",
         transition: Bounce,
         });
+}
+
+// Time and date
+
+_.gettimenow = () =>{
+    return moment().format("DD MM YYYY hh:mm:ss");
 }
 
 export default _;

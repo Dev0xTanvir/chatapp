@@ -1,8 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import homeimg from "../../assets/Home1.png";
+import { getDatabase, ref, onValue, off, set, push } from "firebase/database";
+import { getAuth } from "firebase/auth";
 const FriendRequest = () => {
+  const db = getDatabase();
+  const auth = getAuth();
+  const [request, setrequest] = useState([]);
+  const [loading, setloading] = useState(false);
   let [arrayitem, setarrayitem] = useState(10);
+
+  useEffect(() => {
+    setloading(true);
+    const usersRef = ref(db, "friendrequest");
+    onValue(usersRef, (snapshot) => {
+      const requestBlankarr = [];
+      snapshot.forEach((fruser) => {
+        requestBlankarr.push({...fruser.val(), fruserkey: fruser.key})
+      });
+      setrequest(requestBlankarr);
+      setloading(false);
+    });
+    
+    // Clean up listener
+    return () => {
+      off(usersRef);
+    };
+  }, [auth.currentUser?.uid]);
+
+  console.log(request);
+  
   return (
     <div className="px-2">
       {/* friendrequest list */}
