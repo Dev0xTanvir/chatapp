@@ -3,6 +3,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import homeimg from "../../assets/Home1.png";
 import { getDatabase, ref, onValue, off, set, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import moment from "moment";
 const FriendRequest = () => {
   const db = getDatabase();
   const auth = getAuth();
@@ -28,8 +29,6 @@ const FriendRequest = () => {
     };
   }, [auth.currentUser?.uid]);
 
-  console.log(request);
-  
   return (
     <div className="px-2">
       {/* friendrequest list */}
@@ -41,7 +40,7 @@ const FriendRequest = () => {
           </span>
         </div>
         <div className="overflow-y-scroll h-[50vh]">
-          {[...new Array(arrayitem)].map((_, index) => (
+          {request?.map((fr, index) => (
             <div
               className={
                 arrayitem - 1 === index
@@ -51,14 +50,14 @@ const FriendRequest = () => {
             >
               <div>
                 <picture>
-                  <img src={homeimg} alt={homeimg} />
+                  <img src={fr.whosendfriendrequestprofile_picture || homeimg} alt={homeimg} />
                 </picture>
               </div>
               <div className="py-3">
                 <h1 className="font-popince font-semibold text-[18px]">
-                  Raghav
+                  {fr.whosendfriendrequestname}
                 </h1>
-                <p className="font-popince font-medium text-[14px]">Dinner?</p>
+                <p className="font-popince font-medium text-[14px]">{moment(fr.createdAt).fromNow()}</p>
               </div>
               <button>
                 <button

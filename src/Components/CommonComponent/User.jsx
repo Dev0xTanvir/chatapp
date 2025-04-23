@@ -10,13 +10,14 @@ const User = () => {
   const [userupdate, setuserupdate] = useState([]);
   const [login, setuserlogin] = useState({});
   const [loading, setloading] = useState(false);
+  const [frrequest, setfrrequest] = useState([]);
   const db = getDatabase();
   const auth = getAuth();
 
   useEffect(() => {
     setloading(true);
     const usersRef = ref(db, "users/");
-    const unsubscribe = onValue(usersRef, (snapshot) => {
+    onValue(usersRef, (snapshot) => {
       const pushuser = [];
       snapshot.forEach((user) => {
         if (auth.currentUser?.uid === user.val().userid) {
@@ -35,6 +36,26 @@ const User = () => {
     };
   }, [auth.currentUser?.uid]);
 
+  // Fetch data from friendrequest
+
+  useEffect(() => {
+    setloading(true);
+    const usersRef = ref(db, "friendrequest");
+    onValue(usersRef, (snapshot) => {
+      const sfpushuser = [];
+      snapshot.forEach((fruser) => {
+        if ((auth.currentUser.uid == fruser.val().whosendfriendrequestuid))
+          sfpushuser.push(auth?.currentUser?.uid?.concat(fruser?.val()?.whorecivedfriendrequestuid));
+      });
+      setfrrequest(sfpushuser);
+    });
+
+    // Clean up listener
+    return () => {
+      off(usersRef);
+    };
+  }, [auth.currentUser?.uid]);
+
   // user friendrequest function
 
   let handlefriendrequest = (users) => {
@@ -45,7 +66,7 @@ const User = () => {
       whosendfriendrequestemail: login?.email || auth?.currentUser?.email,
       whosendfriendrequestprofile_picture:
         login?.profile_picture || auth?.currentUser?.photoURL,
-      whosendfriendrequestuserkey: login?.userkey || null,
+      whosendfriendrequestuserkey: login?.userkey || "",
       whorecivedfriendrequestname: users?.username || "",
       whorecivedfriendrequestuid: users?.userid || "",
       whorecivedfriendrequestemail: users?.email || "",
@@ -69,21 +90,24 @@ const User = () => {
           "top-center"
         );
       })
-      .then(() => {
-        let sendidreceivedid = {
-          id: login?.userid + users?.userid,
-        };
-        localStorage.setItem(
-          "sendfriendrequest",
-          JSON.stringify(sendidreceivedid)
-        );
+      // .then(() => {
+      //   let sendidreceivedid = {
+      //     id: login?.userid + users?.userid,
+      //   };
+      //   localStorage.setItem(
+      //     "sendfriendrequest",
+      //     JSON.stringify(sendidreceivedid)
+      //   );
+      // })
+      .catch((err) => {
+        console.error("Error send friendrequest", err);
       });
   };
 
   // get data from local storage
 
-  let sendid = localStorage.getItem("sendfriendrequest");
-  let receivedid = JSON.parse(sendid);
+  // let sendid = localStorage.getItem("sendfriendrequest");
+  // let receivedid = JSON.parse(sendid);
 
   return (
     <div className="px-2">
@@ -151,7 +175,8 @@ const User = () => {
                       {users.email || "missing"}
                     </p>
                   </div>
-                  {login?.userid + users?.userid == receivedid?.id ? (
+
+                  {frrequest?.includes(auth?.currentUser?.uid + users?.userid) ? (
                     <button
                       type="button"
                       className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
