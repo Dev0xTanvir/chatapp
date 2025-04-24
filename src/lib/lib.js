@@ -71,7 +71,7 @@ _.errortost = (msg = 'errortost mising') => {
 // Time and date
 
 _.gettimenow = () =>{
-    return moment().format("MM DD YYYY hh:mm:ss");
+    return moment().format("MM DD YYYY, h:mm:ss a");
 }
 
 export default _;

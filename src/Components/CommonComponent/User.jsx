@@ -11,6 +11,7 @@ const User = () => {
   const [login, setuserlogin] = useState({});
   const [loading, setloading] = useState(false);
   const [frrequest, setfrrequest] = useState([]);
+  const [frindlist, setfrindlist] = useState([]);
   const db = getDatabase();
   const auth = getAuth();
 
@@ -44,10 +45,38 @@ const User = () => {
     onValue(usersRef, (snapshot) => {
       const sfpushuser = [];
       snapshot.forEach((fruser) => {
-        if ((auth.currentUser.uid == fruser.val().whosendfriendrequestuid))
-          sfpushuser.push(auth?.currentUser?.uid?.concat(fruser?.val()?.whorecivedfriendrequestuid));
+        if (auth.currentUser.uid == fruser.val().whosendfriendrequestuid)
+          sfpushuser.push(
+            auth?.currentUser?.uid?.concat(
+              fruser?.val()?.whorecivedfriendrequestuid
+            )
+          );
       });
       setfrrequest(sfpushuser);
+    });
+
+    // Clean up listener
+    return () => {
+      off(usersRef);
+    };
+  }, [auth.currentUser?.uid]);
+
+  // Fetch data from friend
+
+  useEffect(() => {
+    setloading(true);
+    const usersRef = ref(db, "friend");
+    onValue(usersRef, (snapshot) => {
+      const sfpushuser = [];
+      snapshot.forEach((friend) => {
+        if (auth.currentUser.uid == friend.val().whosendfriendrequestuid)
+          sfpushuser.push(
+            friend?.val()?.whorecivedfriendrequestuid?.concat(
+              auth?.currentUser?.uid
+            )
+          );
+      });
+      setfrindlist(sfpushuser);
     });
 
     // Clean up listener
@@ -175,8 +204,12 @@ const User = () => {
                       {users.email || "missing"}
                     </p>
                   </div>
-
-                  {frrequest?.includes(auth?.currentUser?.uid + users?.userid) ? (
+                  {frindlist?.includes(auth?.currentUser?.uid + users?.userid)
+                    ? ""
+                    : ""}
+                  {frrequest?.includes(
+                    auth?.currentUser?.uid + users?.userid
+                  ) ? (
                     <button
                       type="button"
                       className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
