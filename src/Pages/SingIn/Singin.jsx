@@ -51,6 +51,13 @@ const Singin = () => {
       });
   };
 
+  // NEW FUNCTION: KEYUP EVENT HANDELAR
+  const handleKeyUp = (event) => {
+    if (event.key === "Enter") {
+      handlesingin();
+    }
+  };
+
   // handlegoogle function
 
   let handlegoogle = () => {
@@ -124,6 +131,7 @@ const Singin = () => {
                   name="password"
                   value={singininfo.password}
                   onChange={handlechange}
+                  onKeyUp={handleKeyUp}
                   className="font-opensence font-semibold text-[20px] text-[#03014C]  px-3 py-1 border-b border-b-[#03014C] outline-0"
                   placeholder="Enter your password "
                 />
