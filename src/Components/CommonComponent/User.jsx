@@ -13,7 +13,7 @@ const User = () => {
   let [loading, setloading] = useState(false);
   let [frrequest, setfrrequest] = useState([]);
   let [frindlist, setfrindlist] = useState([]);
-  let [unfriend, setUnfriends] = useState([])
+  let [unfriend, setunfriends] = useState([]);
   let db = getDatabase();
   let auth = getAuth();
 
@@ -47,7 +47,7 @@ const User = () => {
     onValue(usersRef, (snapshot) => {
       const sfpushuser = [];
       snapshot.forEach((fruser) => {
-        if (auth.currentUser.uid == fruser.val().whosendfriendrequestuid) {
+        if (auth.currentUser.uid === fruser.val().whosendfriendrequestuid) {
           sfpushuser.push(
             auth?.currentUser?.uid?.concat(
               fruser?.val()?.whorecivedfriendrequestuid
@@ -72,7 +72,7 @@ const User = () => {
     onValue(usersRef, (snapshot) => {
       const sfpushuser = [];
       snapshot.forEach((fr) => {
-        if (auth.currentUser.uid == fr.val().whosendfriendrequestuid) {
+        if (auth.currentUser.uid === fr.val().whosendfriendrequestuid) {
           sfpushuser.push(
             auth?.currentUser?.uid?.concat(
               fr?.val()?.whorecivedfriendrequestuid
@@ -142,26 +142,33 @@ const User = () => {
   // let sendid = localStorage.getItem("sendfriendrequest");
   // let receivedid = JSON.parse(sendid);
 
-  // fetch data from unfriend
-  
- useEffect(() => {
-     const usersRef = ref(db, "users/");
-     onValue(usersRef, (snapshot) => {
-       const blockBlankarr = [];
-       snapshot.forEach((block) => {
-         if (auth?.currentUser?.uid == block?.val()?.userid)
-           blockBlankarr.push({ ...block?.val(), friendkey: block.key });
-          
-       });
-       setUnfriends(blockBlankarr);
-     });
- 
-     // Clean up listener
-     return () => {
-       off(usersRef);
-     };
-   }, [auth.currentUser?.uid]);
-   
+  // fetch data from unfriendlist
+
+  useEffect(() => {
+    const usersRef = ref(db, "unfriendlist/");
+    onValue(usersRef, (snapshot) => {
+      const unfriendBlankarr = [];
+      snapshot.forEach((unfriend) => {
+        if (
+          auth.currentUser.uid === unfriend.val().whorecivedfriendrequestuid
+        ) {
+          unfriendBlankarr.push(
+            auth?.currentUser?.uid?.concat(
+              unfriend?.val()?.whosendfriendrequestuid
+            )
+          );
+        }
+      });
+
+      setunfriends(unfriendBlankarr);
+    });
+
+    // Clean up listener
+    return () => {
+      off(usersRef);
+    };
+  }, [auth.currentUser?.uid]);
+
   return (
     <div className="px-2">
       <div className="shadow-2xs bg-white-200">
@@ -246,7 +253,15 @@ const User = () => {
                     >
                       <FaUser />
                     </button>
-                    
+                  ) : unfriend?.includes(
+                      auth?.currentUser?.uid.concat(users.userid.trim())
+                    ) ? (
+                    <button
+                      type="button"
+                      className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
+                    >
+                      <CgMathPlus />
+                    </button>
                   ) : (
                     <button
                       type="button"

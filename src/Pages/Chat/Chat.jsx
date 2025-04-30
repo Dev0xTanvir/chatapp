@@ -1,15 +1,15 @@
 import React from 'react'
-import Input from '../../Components/CommonComponent/Input'
 import Friend from '../../Components/CommonComponent/Friend'
 import smspng from '../../assets/sms.png.png'
 import { HiDotsVertical } from 'react-icons/hi'
+import Grouplist from '../../Components/CommonComponent/Grouplist'
 const Chat = () => {
   return (
     <div className='w-full h-[100dvh]'>
       <div className='h-full flex'>
       <div className='w-[40%] h-full '>
         <div className='mb-5'>
-        <Input/>
+        <Grouplist/>
         </div>
         <div>
         <Friend/>
