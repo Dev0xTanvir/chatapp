@@ -14,10 +14,10 @@ import { getAuth } from "firebase/auth";
 import moment from "moment";
 import lib from "../../lib/lib";
 const FriendRequest = () => {
-  const db = getDatabase();
-  const auth = getAuth();
-  const [request, setrequest] = useState([]);
-  const [loading, setloading] = useState(false);
+  let db = getDatabase();
+  let auth = getAuth();
+  let [request, setrequest] = useState([]);
+  let [loading, setloading] = useState(false);
   let [arrayitem, setarrayitem] = useState(10);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const FriendRequest = () => {
       });
   };
 
-  // reject friendrequest
+  // remove friendrequest
 
   let handlereject = (fr) => {
     let areyousure = confirm;

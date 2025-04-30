@@ -5,15 +5,17 @@ import { CgMathMinus, CgMathPlus } from "react-icons/cg";
 import { getDatabase, ref, onValue, off, set, push } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import lib from "../../lib/lib";
+import { FaUser } from "react-icons/fa";
 
 const User = () => {
-  const [userupdate, setuserupdate] = useState([]);
-  const [login, setuserlogin] = useState({});
-  const [loading, setloading] = useState(false);
-  const [frrequest, setfrrequest] = useState([]);
-  const [frindlist, setfrindlist] = useState([]);
-  const db = getDatabase();
-  const auth = getAuth();
+  let [userupdate, setuserupdate] = useState([]);
+  let [login, setuserlogin] = useState({});
+  let [loading, setloading] = useState(false);
+  let [frrequest, setfrrequest] = useState([]);
+  let [frindlist, setfrindlist] = useState([]);
+  let [unfriend, setUnfriends] = useState([])
+  let db = getDatabase();
+  let auth = getAuth();
 
   useEffect(() => {
     setloading(true);
@@ -45,12 +47,13 @@ const User = () => {
     onValue(usersRef, (snapshot) => {
       const sfpushuser = [];
       snapshot.forEach((fruser) => {
-        if (auth.currentUser.uid == fruser.val().whosendfriendrequestuid)
+        if (auth.currentUser.uid == fruser.val().whosendfriendrequestuid) {
           sfpushuser.push(
             auth?.currentUser?.uid?.concat(
               fruser?.val()?.whorecivedfriendrequestuid
             )
           );
+        }
       });
       setfrrequest(sfpushuser);
     });
@@ -68,13 +71,14 @@ const User = () => {
     const usersRef = ref(db, "friend");
     onValue(usersRef, (snapshot) => {
       const sfpushuser = [];
-      snapshot.forEach((friend) => {
-        if (auth.currentUser.uid == friend.val().whosendfriendrequestuid)
+      snapshot.forEach((fr) => {
+        if (auth.currentUser.uid == fr.val().whosendfriendrequestuid) {
           sfpushuser.push(
-            friend?.val()?.whorecivedfriendrequestuid?.concat(
-              auth?.currentUser?.uid
+            auth?.currentUser?.uid?.concat(
+              fr?.val()?.whorecivedfriendrequestuid
             )
           );
+        }
       });
       setfrindlist(sfpushuser);
     });
@@ -138,6 +142,26 @@ const User = () => {
   // let sendid = localStorage.getItem("sendfriendrequest");
   // let receivedid = JSON.parse(sendid);
 
+  // fetch data from unfriend
+  
+ useEffect(() => {
+     const usersRef = ref(db, "users/");
+     onValue(usersRef, (snapshot) => {
+       const blockBlankarr = [];
+       snapshot.forEach((block) => {
+         if (auth?.currentUser?.uid == block?.val()?.userid)
+           blockBlankarr.push({ ...block?.val(), friendkey: block.key });
+          
+       });
+       setUnfriends(blockBlankarr);
+     });
+ 
+     // Clean up listener
+     return () => {
+       off(usersRef);
+     };
+   }, [auth.currentUser?.uid]);
+   
   return (
     <div className="px-2">
       <div className="shadow-2xs bg-white-200">
@@ -204,9 +228,6 @@ const User = () => {
                       {users.email || "missing"}
                     </p>
                   </div>
-                  {frindlist?.includes(auth?.currentUser?.uid + users?.userid)
-                    ? ""
-                    : ""}
                   {frrequest?.includes(
                     auth?.currentUser?.uid + users?.userid
                   ) ? (
@@ -216,6 +237,16 @@ const User = () => {
                     >
                       <CgMathMinus />
                     </button>
+                  ) : frindlist?.includes(
+                      auth?.currentUser?.uid.concat(users.userid.trim())
+                    ) ? (
+                    <button
+                      type="button"
+                      className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
+                    >
+                      <FaUser />
+                    </button>
+                    
                   ) : (
                     <button
                       type="button"
