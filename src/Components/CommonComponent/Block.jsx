@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import homeimg from "../../assets/Home1.png";
-import { getDatabase, ref, onValue, off, set, push } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  off,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import { getAuth } from "firebase/auth";
 import lib from "../../lib/lib";
 import Alert from "../Alert/Alert";
@@ -12,6 +20,7 @@ const Block = () => {
   let db = getDatabase();
   let auth = getAuth();
   let [blockrequest, setblockrequest] = useState([]);
+  let [unblockuser, setunblockuser] = useState([]);
 
   // Fetch Block Data
 
@@ -24,6 +33,53 @@ const Block = () => {
           blockBlankarr.push({ ...block?.val(), friendkey: block.key });
       });
       setblockrequest(blockBlankarr);
+    });
+
+    // Clean up listener
+    return () => {
+      off(usersRef);
+    };
+  }, [auth.currentUser?.uid]);
+
+  // Handle unblock function
+
+  let handleunblock = (blockuser) => {
+    set(push(ref(db, "friend")), {
+      ...blockuser,
+      createdAt: lib.gettimenow(),
+    })
+      .then(() => {
+        // remove unblock id
+        const frRef = ref(db, `blocklist/${blockuser.friendkey}`);
+        remove(frRef);
+      })
+      .then(() => {
+        lib.successtost(
+          `You unfriended ${blockuser?.whorecivedfriendrequestname}`,
+          "top-center"
+        );
+      })
+      .catch((err) => {
+        console.error("Error unfriending", err);
+      });
+  };
+
+  // fetch data from unblock
+
+  useEffect(() => {
+    const usersRef = ref(db, "unblock");
+    onValue(usersRef, (snapshot) => {
+      const unblockpushuser = [];
+      snapshot.forEach((ubluser) => {
+        if (auth.currentUser.uid == ubluser.val().whorecivedfriendrequestuid) {
+          unblockpushuser.push(
+            auth?.currentUser?.uid?.concat(
+              ubluser?.val()?.whosendfriendrequestuid
+            )
+          );
+        }
+      });
+      setunblockuser(unblockpushuser);
     });
 
     // Clean up listener
@@ -70,14 +126,30 @@ const Block = () => {
                   {moment(blockuser.createdAt).fromNow()}
                 </p>
               </div>
-              <button>
-                <button
-                  type="button"
-                  class="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
-                >
-                  unblock
+              {unblockuser.includes(
+                auth?.currentUser?.uid?.concat(
+                  blockuser?.whosendfriendrequestuid
+                )
+              ) ? (
+                <button>
+                  <button
+                    type="button"
+                    class="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
+                  >
+                    Friend
+                  </button>
                 </button>
-              </button>
+              ) : (
+                <button>
+                  <button
+                    onClick={() => handleunblock(blockuser)}
+                    type="button"
+                    class="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
+                  >
+                    unblock
+                  </button>
+                </button>
+              )}
             </div>
           ))}
         </div>

@@ -19,8 +19,9 @@ const Friend = () => {
   let [request, setrequest] = useState([]);
   let [loading, setloading] = useState(false);
   let [arrayitem, setarrayitem] = useState(10);
-  let [block, setblock] = useState(false);
   let [blockuser, setblockuser] = useState([]);
+  let [unblock, setunblock] = useState([]);
+  let [unfrand, setunfrand] = useState([]);
 
   useEffect(() => {
     setloading(true);
@@ -84,35 +85,19 @@ const Friend = () => {
 
   // handleunfriend function implement 1
 
-  // let handleunfriend = (fr) => {
-  //   // unfriend friendrequest id
-  //   let frrequest = ref(db, `friend/${fr.friendkey}`);
-  //   remove(frrequest)
-  //   .then(() => {
-  //     lib.successtost("Unfriend successfully", "top-center");
-  //   })
-  //   .catch((err) => {
-  //     console.error("Error unfriending", err);
-  //   });
-  // };
-
-  // handleunfriend function implement 2
-
-  let handleunfriend = (friend) => {
-    const friendRef = ref(db, `friend/${friend.friendkey}`);
-  
-    //  First store in 'unfriendlist'
-    set(push(ref(db, "unfriendlist")), {
-      ...friend,
-      unfriendedAt: lib.gettimenow(),
+  let handleunfriend = (unfrienduser) => {
+    set(push(ref(db, "users")), {
+      ...unfrienduser,
+      createdAt: lib.gettimenow(),
     })
       .then(() => {
-        //  Then remove from 'friend' 
-        return remove(friendRef);
+        // remove unblock id
+        const frRef = ref(db, `friend/${unfrienduser.friendkey}`);
+        remove(frRef);
       })
       .then(() => {
         lib.successtost(
-          `You unfriended ${friend.whorecivedfriendrequestname}`,
+          `You unfriended ${blockuser?.whorecivedfriendrequestname}`,
           "top-center"
         );
       })
@@ -120,7 +105,53 @@ const Friend = () => {
         console.error("Error unfriending", err);
       });
   };
-  
+
+  // fetch data from user
+
+  useEffect(() => {
+    const usersRef = ref(db, "users");
+    onValue(usersRef, (snapshot) => {
+      const userspushuser = [];
+      snapshot.forEach((users) => {
+        if (auth.currentUser.uid == users.val().whorecivedfriendrequestuid) {
+          userspushuser.push(
+            auth?.currentUser?.uid?.concat(
+              users?.val()?.whosendfriendrequestuid
+            )
+          );
+        }
+      });
+      setunfrand(userspushuser);
+    });
+
+    // Clean up listener
+    return () => {
+      off(usersRef);
+    };
+  }, [auth.currentUser?.uid]);
+
+  // Fetch data from unblock
+
+  useEffect(() => {
+    setloading(true);
+    const usersRef = ref(db, "unblock");
+    onValue(usersRef, (snapshot) => {
+      const unblockBlankarr = [];
+      snapshot.forEach((unblock) => {
+        if (
+          auth?.currentUser?.uid == unblock?.val()?.whorecivedfriendrequestuid
+        )
+          unblockBlankarr.push({ ...unblock?.val(), unblockkey: unblock.key });
+      });
+      setunblock(unblockBlankarr);
+      setloading(false);
+    });
+
+    // Clean up listener
+    return () => {
+      off(usersRef);
+    };
+  }, [auth.currentUser?.uid]);
 
   return (
     <div className="px-2">
@@ -160,13 +191,24 @@ const Friend = () => {
                 </div>
                 <div>
                   <button className="font-popince font-medium text-[10px]">
-                    <button
-                      type="button"
-                      onClick={() => handleunfriend(fr)}
-                      className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer"
-                    >
-                      Unfriend
-                    </button>
+                    {unfrand.includes(
+                      auth.currentUser.uid.concat(fr.whosendfriendrequestuid)
+                    ) ? (
+                      <button
+                        type="button"
+                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer"
+                      >
+                        Unfriend
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleunfriend(fr)}
+                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer"
+                      >
+                        Unfriend
+                      </button>
+                    )}
                     {blockuser.includes(
                       auth.currentUser.uid.concat(fr.whosendfriendrequestuid)
                     ) ? (

@@ -47,7 +47,7 @@ const User = () => {
     onValue(usersRef, (snapshot) => {
       const sfpushuser = [];
       snapshot.forEach((fruser) => {
-        if (auth.currentUser.uid === fruser.val().whosendfriendrequestuid) {
+        if (auth.currentUser.uid == fruser.val().whosendfriendrequestuid) {
           sfpushuser.push(
             auth?.currentUser?.uid?.concat(
               fruser?.val()?.whorecivedfriendrequestuid
@@ -72,7 +72,7 @@ const User = () => {
     onValue(usersRef, (snapshot) => {
       const sfpushuser = [];
       snapshot.forEach((fr) => {
-        if (auth.currentUser.uid === fr.val().whosendfriendrequestuid) {
+        if (auth.currentUser.uid == fr.val().whosendfriendrequestuid) {
           sfpushuser.push(
             auth?.currentUser?.uid?.concat(
               fr?.val()?.whorecivedfriendrequestuid
@@ -142,16 +142,14 @@ const User = () => {
   // let sendid = localStorage.getItem("sendfriendrequest");
   // let receivedid = JSON.parse(sendid);
 
-  // fetch data from unfriendlist
+  // fetch data from user
 
   useEffect(() => {
-    const usersRef = ref(db, "unfriendlist/");
+    const usersRef = ref(db, "users/");
     onValue(usersRef, (snapshot) => {
       const unfriendBlankarr = [];
       snapshot.forEach((unfriend) => {
-        if (
-          auth.currentUser.uid === unfriend.val().whorecivedfriendrequestuid
-        ) {
+        if (auth.currentUser.uid == unfriend.val().whorecivedfriendrequestuid) {
           unfriendBlankarr.push(
             auth?.currentUser?.uid?.concat(
               unfriend?.val()?.whosendfriendrequestuid
@@ -159,7 +157,6 @@ const User = () => {
           );
         }
       });
-
       setunfriends(unfriendBlankarr);
     });
 
@@ -254,7 +251,7 @@ const User = () => {
                       <FaUser />
                     </button>
                   ) : unfriend?.includes(
-                      auth?.currentUser?.uid.concat(users.userid.trim())
+                      auth?.currentUser?.uid.concat(users.whosendfriendrequestuid)
                     ) ? (
                     <button
                       type="button"
