@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import homeimg from "../../assets/Home1.png";
+import { fetchdata } from "../../Utils/Fetchdata.Utils";
 const Group = () => {
   let [arrayitem, setarrayitem] = useState(10);
+
+  // fetch data from grouplist
+
+  useEffect(() => {
+    const fetchdatainbok = async () =>{
+     await fetchdata('grouplist')
+    }
+    fetchdatainbok()
+  }, [])
+
+
+
   return (
     <div className="px-2">
 

@@ -1,67 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import homeimg from "../../assets/Home1.png";
 import Modal from "react-modal";
-import { getDatabase, ref, set } from "firebase/database";
+import lib from "../../lib/lib";
+import { setFirebasedata, Uplodefile } from "../../Utils/Uplode";
+import { closeModal, openModal } from "../../Utils/Mudal.Utils";
+import { validationFild } from "../../Validation/Validation";
+import { handleinput } from "../../Utils/OnchangeHendeler.Utils";
+import { getAuth } from "firebase/auth";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
 
 const Grouplist = () => {
-  let [arrayitem, setarrayitem] = useState(10);
+  const auth = getAuth();
+  const inputuseref = useRef(null)
+  const [arrayitem, setarrayitem] = useState(10);
   const [modalIsOpen, setIsOpen] = useState(false);
-  let [grouperror, setgrouperror] = useState({});
-  let [groupinfo, setgroupinfo] = useState({
+  const [loading, setloading] = useState(false);
+  const [grouperror, setgrouperror] = useState({});
+  const [groupinfo, setgroupinfo] = useState({
     groupName: "",
     groupTagname: "",
     groupImg: "",
   });
 
-  // hadleinput function implement
-
-  let handleinput = (event) => {
-    const { id, value, files } = event.target;
-    setgroupinfo({
-      ...groupinfo,
-      [id]: id === "groupImg" ? files[0] : value,
-    });
-    validation();
-  };
-
-  // validate function implement
-
-  let validation = () => {
-    let error = {};
-    for (let field in groupinfo) {
-      if (groupinfo[field] === "") {
-        error[`${field}error`] = `${field} is required`;
-      }
-    }
-    setgrouperror(error);
-    return Object.keys(error).length === 0;
-  };
-
   // handlekeydown function implement
 
   let handlekeydown = () => {
-    validation();
+    validationFild(setgrouperror);
   };
 
   // validate all function implement
 
   const handlesubmit = async (event) => {
-    const db = getDatabase()
-    event.preventDefault(); 
-
-    if (!validation()) return;
+    event.preventDefault();
+    const isValid = validationFild(groupinfo, setgrouperror);
+    if (!isValid) return;
 
     const formData = new FormData();
     formData.append("file", groupinfo.groupImg);
@@ -69,35 +42,32 @@ const Grouplist = () => {
     formData.append("cloud_name", "dexercysn");
 
     try {
-      const response = await fetch(
-        "https://api.cloudinary.com/v1_1/dexercysn/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      console.log("Image uploaded:", data.secure_url);
-
-      // set group into db
-
-      set(ref(db, 'grouplist/' ), {
-        username: name,
-        email: email,
-        profile_picture : imageUrl
+      setloading(true);
+      const Url = Uplodefile(formData);
+      setFirebasedata("grouplist/", {
+        adminname: auth.currentUser.displayName,
+        adminUid: auth.currentUser.uid,
+        adminEmail: auth.currentUser.email,
+        profile_picture: auth.currentUser.photoURL,
+        groupName: groupinfo.groupName,
+        groupTagname: groupinfo.groupTagname,
+        groupImg: Url,
       });
-
     } catch (error) {
       console.error("Error uploading image:", error);
-    }
+    } finally {
+      setloading(false);
+      setgroupinfo({
+        groupName: "",
+        groupTagname: "",
+        groupImg: "",
+      });
+      closeModal(setIsOpen);
+      if (inputuseref.current) {
+        inputuseref.current.value = null;
+      };
+    };
   };
-  function openModal() {
-    setIsOpen(true);
-  }
-  function closeModal() {
-    setIsOpen(false);
-  }
 
   return (
     <div className="px-2">
@@ -151,7 +121,7 @@ const Grouplist = () => {
           <span>
             <button
               type="button"
-              onClick={openModal}
+              onClick={() => openModal(setIsOpen)}
               className="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
             >
               Create Group
@@ -196,11 +166,14 @@ const Grouplist = () => {
 
       {/* Modal component */}
       <div className="mx-auto">
-        <button onClick={openModal}></button>
-        <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={lib.customStyles}
+        >
           <button
             type="button"
-            onClick={closeModal}
+            onClick={() => closeModal(setIsOpen)}
             className="focus:outline-none cursor-pointer text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
           >
             X
@@ -220,8 +193,11 @@ const Grouplist = () => {
                 </label>
                 <input
                   type="text"
+                  value={groupinfo.groupName}
                   onKeyDown={handlekeydown}
-                  onChange={handleinput}
+                  onChange={(event) =>
+                    handleinput(event, groupinfo, validationFild, setgroupinfo)
+                  }
                   id="groupName"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Group name"
@@ -243,8 +219,11 @@ const Grouplist = () => {
                 </label>
                 <input
                   type="text"
+                  value={groupinfo.groupTagname}
                   onKeyDown={handlekeydown}
-                  onChange={handleinput}
+                  onChange={(event) =>
+                    handleinput(event, groupinfo, validationFild, setgroupinfo)
+                  }
                   id="groupTagname"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
@@ -267,8 +246,11 @@ const Grouplist = () => {
                 <input
                   className="block w-full text-sm py-2 mb-3 text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   id="groupImg"
+                  ref={inputuseref}
                   onKeyDown={handlekeydown}
-                  onChange={handleinput}
+                  onChange={(event) =>
+                    handleinput(event, groupinfo, validationFild, setgroupinfo)
+                  }
                   type="file"
                 />
                 {grouperror.groupImgerror && (
@@ -277,13 +259,22 @@ const Grouplist = () => {
                   </span>
                 )}
               </div>
-              <button
-                type="submit"
-                onClick={handlesubmit}
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-5"
-              >
-                Submit
-              </button>
+              {loading ? (
+                <button
+                  type="submit"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-5"
+                >
+                  Loading...
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  onClick={handlesubmit}
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-5"
+                >
+                  Submit
+                </button>
+              )}
             </form>
           </div>
         </Modal>
