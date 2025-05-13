@@ -8,9 +8,11 @@ const Group = () => {
   // fetch data from grouplist
 
   useEffect(() => {
-    const fetchdatainbok = async () =>{
-     await fetchdata('grouplist')
+    const fetchdatainbok = async () => {
+    let value =  await fetchdata('grouplist')
+    console.log(value);
     }
+    
     fetchdatainbok()
   }, [])
 

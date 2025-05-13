@@ -1,6 +1,7 @@
 import {
   getDatabase,
   ref,
+  get,
   onValue,
   off,
   set,
@@ -13,16 +14,17 @@ const db = getDatabase();
 export const fetchdata = async (dbname = "grouplist") => {
   try {
     const starCountRef = ref(db, dbname);
-    let customblankarr = [];
-    onValue(starCountRef, (snapshot) => {
+    let snapshot = await get(starCountRef);
+    const customblankarr = [];
+    if (snapshot.exists()) {
       snapshot.forEach((element) => {
         customblankarr.push({
           ...element.val(),
           [`${dbname} key`]: element.key,
         });
       });
-      console.log(customblankarr);
-    });
+    }
+    return customblankarr;
   } catch (error) {
     throw new Error(`Faield to fetch data from ${dbname} database`);
   }
