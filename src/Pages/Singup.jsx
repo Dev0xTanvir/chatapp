@@ -204,9 +204,13 @@ const Singup = () => {
             </Link>
           </p>
         </div>
-        <div className=" w-1/2 h-screen">
+        <div className="w-1/2 h-screen flex justify-center items-center">
           <picture>
-            <img src={regestation} alt={regestation} />
+            <img
+              src={regestation}
+              alt={regestation}
+              className="h-full w-full object-cover"
+            />
           </picture>
         </div>
       </div>

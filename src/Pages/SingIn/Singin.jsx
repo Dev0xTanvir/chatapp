@@ -65,18 +65,18 @@ const Singin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log(result);
-        let {user} = result
+        let { user } = result;
         let userdb = ref(db, "users/");
         set(push(userdb), {
           userid: result?.user?.uid,
           username: result?.user?.displayName,
-          email: result?.user?.email ,
+          email: result?.user?.email,
           profile_picture:
             result?.user?.photoURL ||
             `https://images.pexels.com/photos/20566244/pexels-photo-20566244/free-photo-of-portrait-of-a-beautiful-blonde-peeking-from-behind-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load`,
         }).then(() => {
-          navigate('/')
-        })
+          navigate("/");
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -161,9 +161,13 @@ const Singin = () => {
             </p>
           </div>
         </div>
-        <div className=" w-1/2 h-screen">
+        <div className="w-1/2 h-screen flex justify-center items-center">
           <picture>
-            <img src={singinjpj} alt={singinjpj} />
+            <img
+              src={singinjpj}
+              alt={singinjpj}
+              className="h-full w-full object-cover"
+            />
           </picture>
         </div>
       </div>

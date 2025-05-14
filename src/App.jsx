@@ -5,11 +5,13 @@ import Singup from './Pages/Singup';
 import Rootlayout from './Components/Roorlayout/Rootlayout';
 import Index from './Pages/Home/Index';
 import Chat from './Pages/Chat/Chat';
+import Dark from './Pages/Dark/Dark';
 
 const App = () => {
   return (
     <>
     <BrowserRouter>
+      <Dark/>{/* Outside Routes if it's a global component */}
     <Routes>
       <Route path="/" element={<Rootlayout/>}>
       <Route index element={<Index/>}></Route>

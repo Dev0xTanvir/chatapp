@@ -11,6 +11,7 @@ import { CgLogOut } from "react-icons/cg";
 import { Link, useNavigate } from "react-router";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 import { getAuth } from "firebase/auth";
+
 const Sidebar = () => {
   let db = getDatabase();
   let navigate = useNavigate();
