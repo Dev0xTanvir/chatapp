@@ -11,7 +11,7 @@ const App = () => {
   return (
     <>
     <BrowserRouter>
-      <Dark/>{/* Outside Routes if it's a global component */}
+      {/* <Dark/> */}
     <Routes>
       <Route path="/" element={<Rootlayout/>}>
       <Route index element={<Index/>}></Route>

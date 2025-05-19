@@ -1,31 +1,61 @@
-import {
-  getDatabase,
-  ref,
-  get,
-  onValue,
-  off,
-  set,
-  push,
-  remove,
-} from "firebase/database";
+import { getDatabase, ref, get } from "firebase/database";
+import { useEffect, useState } from "react";
 
-const db = getDatabase();
+// Custom hook: useFetchdata
+export const useFetchdata = () => {
+  const db = getDatabase();
+  const [grouplist, setGrouplist] = useState({
+    data: [],
+    error: null,
+    loading: true,
+  });
 
-export const fetchdata = async (dbname = "grouplist") => {
-  try {
-    const starCountRef = ref(db, dbname);
-    let snapshot = await get(starCountRef);
-    const customblankarr = [];
-    if (snapshot.exists()) {
-      snapshot.forEach((element) => {
-        customblankarr.push({
-          ...element.val(),
-          [`${dbname} key`]: element.key,
+  useEffect(() => {
+    const fetchGroupList = async () => {
+      try {
+        const starCountRef = ref(db, "grouplist");
+        const snapshot = await get(starCountRef);
+
+        if (snapshot.exists()) {
+          const customArray = [];
+          snapshot.forEach((element) => {
+            customArray.push({
+              ...element.val(),
+              id: element.key,
+            });
+          });
+
+          setGrouplist({
+            data: customArray,
+            error: null,
+            loading: false,
+          });
+        } else {
+          setGrouplist({
+            data: [],
+            error: {
+              message: "No data found",
+              statusCode: 404,
+              status: "Failed",
+            },
+            loading: false,
+          });
+        }
+      } catch (error) {
+        setGrouplist({
+          data: [],
+          error: {
+            message: error.message,
+            statusCode: 500,
+            status: "Error",
+          },
+          loading: false,
         });
-      });
-    }
-    return customblankarr;
-  } catch (error) {
-    throw new Error(`Faield to fetch data from ${dbname} database`);
-  }
+      }
+    };
+
+    fetchGroupList();
+  }, []);
+
+  return grouplist;
 };
