@@ -4,7 +4,11 @@ import smspng from "../../assets/sms.png.png";
 import { HiDotsVertical } from "react-icons/hi";
 import Grouplist from "../../Components/CommonComponent/Grouplist";
 import { FaCameraRetro, FaRegSmileBeam, FaTelegramPlane } from "react-icons/fa";
+import { useSelector } from "react-redux";
 const Chat = () => {
+ let {value} = useSelector((store)=> store.friend)
+ console.log(value);
+ 
   return (
     <div className="w-full h-[100dvh]">
       <div className="h-full flex">
@@ -13,7 +17,7 @@ const Chat = () => {
             <Grouplist />
           </div>
           <div>
-            <Friend />
+            <Friend buttonvisible = {false}/>
           </div>
         </div>
         <div className="w-[60%] h-full">

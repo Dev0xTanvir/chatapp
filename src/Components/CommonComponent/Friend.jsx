@@ -13,9 +13,12 @@ import {
 import { getAuth } from "firebase/auth";
 import lib from "../../lib/lib";
 import Alert from "../Alert/Alert";
-const Friend = () => {
+import { friendaction } from "../../fetures/slice/friendSlice";
+import { useDispatch } from "react-redux";
+const Friend = ({ buttonvisible = true }) => {
   let db = getDatabase();
   let auth = getAuth();
+  const dispatch = useDispatch();
   let [request, setrequest] = useState([]);
   let [loading, setloading] = useState(false);
   let [arrayitem, setarrayitem] = useState(10);
@@ -153,6 +156,33 @@ const Friend = () => {
     };
   }, [auth.currentUser?.uid]);
 
+  // Send msg handeler
+
+  const sendmsg = (friendinfo) => {
+    if (auth.currentUser.uid == friendinfo.whorecivedfriendrequestuid) {
+      let userinfo = {
+        whosendfriendrequestemail: friendinfo.whosendfriendrequestemail,
+        whosendfriendrequestname: friendinfo.whosendfriendrequestname,
+        whosendfriendrequestprofile_picture:
+          friendinfo.whosendfriendrequestprofile_picture,
+        whosendfriendrequestuid: friendinfo.whosendfriendrequestuid,
+        whosendfriendrequestuserkey: friendinfo.whosendfriendrequestuserkey,
+      };
+      dispatch(friendaction(userinfo));
+    } else {
+      let userinfo = {
+        whorecivedfriendrequestemail: friendinfo.whorecivedfriendrequestemail,
+        whorecivedfriendrequestname: friendinfo.whorecivedfriendrequestname,
+        whorecivedfriendrequestprofile_picture:
+          friendinfo.whorecivedfriendrequestprofile_picture,
+        whorecivedfriendrequestuid: friendinfo.whorecivedfriendrequestuid,
+        whorecivedfriendrequestuserkey:
+          friendinfo.whorecivedfriendrequestuserkey,
+      };
+      dispatch(friendaction(userinfo));
+    }
+  };
+
   return (
     <div className="px-2">
       {/* friend list */}
@@ -167,6 +197,7 @@ const Friend = () => {
           {request?.length > 0 ? (
             request?.map((fr, index) => (
               <div
+                onClick={() => sendmsg(fr)}
                 className={
                   arrayitem - 1 === index
                     ? "flex justify-between items-center mt-3 pb-2"
@@ -189,46 +220,52 @@ const Friend = () => {
                     {fr?.whosendfriendrequestemail}
                   </p>
                 </div>
-                <div>
-                  <button className="font-popince font-medium text-[10px]">
-                    {unfrand.includes(
-                      auth.currentUser.uid.concat(fr.whosendfriendrequestuid)
-                    ) ? (
-                      <button
-                        type="button"
-                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer"
-                      >
-                        Unfriend
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleunfriend(fr)}
-                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer"
-                      >
-                        Unfriend
-                      </button>
-                    )}
-                    {blockuser.includes(
-                      auth.currentUser.uid.concat(fr.whosendfriendrequestuid)
-                    ) ? (
-                      <button
-                        type="button"
-                        className="focus:outline-none text-white bg-yellow-500 hover:bg-red-800 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2   cursor-pointer"
-                      >
-                        Unblocked
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleblock(fr)}
-                        className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer"
-                      >
-                        Block
-                      </button>
-                    )}
-                  </button>
-                </div>
+                {/* Friend button list */}
+
+                {buttonvisible ? (
+                  <div>
+                    <button className="font-popince font-medium text-[10px]">
+                      {unfrand.includes(
+                        auth.currentUser.uid.concat(fr.whosendfriendrequestuid)
+                      ) ? (
+                        <button
+                          type="button"
+                          className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer"
+                        >
+                          Unfriend
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleunfriend(fr)}
+                          className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer"
+                        >
+                          Unfriend
+                        </button>
+                      )}
+                      {blockuser.includes(
+                        auth.currentUser.uid.concat(fr.whosendfriendrequestuid)
+                      ) ? (
+                        <button
+                          type="button"
+                          className="focus:outline-none text-white bg-yellow-500 hover:bg-red-800 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2   cursor-pointer"
+                        >
+                          Unblocked
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleblock(fr)}
+                          className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer"
+                        >
+                          Block
+                        </button>
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  <div> </div>
+                )}
               </div>
             ))
           ) : (
