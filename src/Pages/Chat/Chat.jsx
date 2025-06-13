@@ -1,14 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import Friend from "../../Components/CommonComponent/Friend";
 import smspng from "../../assets/sms.png.png";
 import { HiDotsVertical } from "react-icons/hi";
 import Grouplist from "../../Components/CommonComponent/Grouplist";
 import { FaCameraRetro, FaRegSmileBeam, FaTelegramPlane } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import EmojiPicker from "emoji-picker-react";
+import { getDatabase, push, ref, set } from "firebase/database";
+import { getAuth } from "firebase/auth";
 const Chat = () => {
- let {value} = useSelector((store)=> store.friend)
- console.log(value);
- 
+  const db = getDatabase();
+  const auth = getAuth();
+  const [loading, setloading] = useState(false);
+  const [imoji, setimoji] = useState();
+  const [imojiopen, setimojiopen] = useState(false);
+  let { value } = useSelector((store) => store.friend);
+  console.log(value);
+
+  // imoji set
+  const handleimoji = ({ emoji }) => {
+    setimoji((prev) => prev + emoji);
+  };
+
+  // msg sent
+
+  const handelsendmsg = async () => {
+    setloading(true);
+    try {
+      await set(push(ref(db, "sendmsg")), {
+        whosendfriendrequestemail: auth.currentUser.email,
+        whosendfriendrequestname: auth.currentUser.displayName,
+        whosendfriendrequestprofile_picture: auth.currentUser.photoURL,
+        whosendfriendrequestuid: auth.currentUser.uid,
+
+        whorecivedfriendrequestemail: value.whosendfriendrequestemail,
+        whorecivedfriendrequestname: value.whosendfriendrequestname,
+        whorecivedfriendrequestprofile_picture:
+          value.whosendfriendrequestprofile_picture,
+        whorecivedfriendrequestuid: value.whosendfriendrequestuid,
+        sendmsg: imoji,
+      });
+    } catch (error) {
+      console.error("handelsendmsg send error", error);
+    } finally {
+      setloading(false);
+      setimojiopen(false)
+      setimoji('')
+    }
+  };
+
   return (
     <div className="w-full h-[100dvh]">
       <div className="h-full flex">
@@ -17,7 +57,7 @@ const Chat = () => {
             <Grouplist />
           </div>
           <div>
-            <Friend buttonvisible = {false}/>
+            <Friend buttonvisible={false} />
           </div>
         </div>
         <div className="w-[60%] h-full">
@@ -25,12 +65,21 @@ const Chat = () => {
             <div className="flex items-center gap-[33px]">
               <div>
                 <picture>
-                  <img src={smspng} alt={smspng} />
+                  <img
+                    src={value.whosendfriendrequestprofile_picture}
+                    alt={value.whosendfriendrequestprofile_picture}
+                  />
                 </picture>
               </div>
               <div>
-                <h1>Swathi </h1>
-                <p>Online</p>
+                <h1 className="font-popince font-semibold text-[24px] text-[#000000]">
+                  {value.whosendfriendrequestname}
+                </h1>
+                {navigator.onLine && (
+                  <span className="font-popince font-normal text-[14px] text-[#000000]">
+                    Online
+                  </span>
+                )}
               </div>
             </div>
             <div>
@@ -76,18 +125,26 @@ const Chat = () => {
           {/* chat action */}
           <div className="flex items-center gap-x-5 relative">
             <input
+              onChange={(e) => setimoji(e.target.value)}
               type="text"
+              value={imoji}
               name="textsender"
               id="textsender"
               placeholder="type msg..."
               className="w-[90%] px-3 py-4 rounded-2xl border"
             />
-            <span>
-              <FaTelegramPlane className="text-5xl" />
-            </span>
+            {loading ? (
+              <span>
+                <FaTelegramPlane className="text-5xl animate-spin" />
+              </span>
+            ) : (
+              <span onClick={handelsendmsg}>
+                <FaTelegramPlane className="text-5xl" />
+              </span>
+            )}
           </div>
-          <div className="flex gap-x-3 absolute right-[140px] bottom-[-23px]" >
-            <span>
+          <div className="flex gap-x-3 absolute right-[140px] bottom-[-35px]">
+            <span onClick={() => setimojiopen(!imojiopen)}>
               <FaRegSmileBeam className="text-3xl" />
             </span>
             <span>
@@ -95,6 +152,9 @@ const Chat = () => {
             </span>
           </div>
           {/* chat action */}
+        </div>
+        <div className=" absolute right-[10%]">
+          <EmojiPicker open={imojiopen} onEmojiClick={handleimoji} />
         </div>
       </div>
     </div>
