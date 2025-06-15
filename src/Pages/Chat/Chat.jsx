@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Friend from "../../Components/CommonComponent/Friend";
 import smspng from "../../assets/sms.png.png";
 import { HiDotsVertical } from "react-icons/hi";
@@ -6,21 +6,48 @@ import Grouplist from "../../Components/CommonComponent/Grouplist";
 import { FaCameraRetro, FaRegSmileBeam, FaTelegramPlane } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import EmojiPicker from "emoji-picker-react";
-import { getDatabase, push, ref, set } from "firebase/database";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import liv from '../../lib/lib'
+import moment from "moment";
 const Chat = () => {
   const db = getDatabase();
   const auth = getAuth();
   const [loading, setloading] = useState(false);
-  const [imoji, setimoji] = useState();
+  const [imoji, setimoji] = useState("");
   const [imojiopen, setimojiopen] = useState(false);
+  const [allsinglemsg, setallsinglemsg] = useState([]);
   let { value } = useSelector((store) => store.friend);
-  console.log(value);
 
   // imoji set
   const handleimoji = ({ emoji }) => {
     setimoji((prev) => prev + emoji);
   };
+
+  // sendmsg fethdata
+
+  useEffect(() => {
+    const sendmsgfetchdata = async () => {
+      try {
+        const starCountRef = ref(db, "sendmsg");
+        onValue(starCountRef, (snapshot) => {
+          let msgBlankarr = [];
+          snapshot.forEach((msg) => {
+            if (
+              auth.currentUser.uid == msg.val().whosendfriendrequestuid ||
+              auth.currentUser.uid == msg.val().whorecivedfriendrequestuid
+            ) {
+              msgBlankarr.push({ ...msg.val(), msgkey: msg.key });
+            }
+          });
+          setallsinglemsg(msgBlankarr);
+        });
+      } catch (error) {
+        console.error("error msg fetchdata", error);
+      }
+    };
+    sendmsgfetchdata();
+  }, []);
 
   // msg sent
 
@@ -44,8 +71,8 @@ const Chat = () => {
       console.error("handelsendmsg send error", error);
     } finally {
       setloading(false);
-      setimojiopen(false)
-      setimoji('')
+      setimojiopen(false);
+      setimoji("");
     }
   };
 
@@ -90,35 +117,48 @@ const Chat = () => {
           </div>
           {/* chat view */}
           <div className="flex w-full flex-col h-[80vh] overflow-y-scroll">
-            {[...new Array(10)].map((_, index) =>
-              index % 2 == 0 ? (
-                <div className="px-[50px] self-start mt-10">
-                  <div className="flex flex-col">
-                    <div className="text-center bg-[#F1F1F1] px-6 py-3 rounded-2xl">
-                      <h1 className="font-popince font-medium text-[16px]">
-                        Hey There !
-                      </h1>
+            {allsinglemsg.map((msg) => {
+              if (
+                auth.currentUser.uid == msg.whosendfriendrequestuid &&
+                value.whosendfriendrequestuid == msg.whorecivedfriendrequestuid
+              ) {
+                return (
+                  <div className="px-[50px] self-end">
+                    <div className="flex flex-col">
+                      <div className="text-center bg-[#5F35F5] px-6 py-3 rounded-2xl">
+                        <h1 className="font-popince font-medium text-[16px]">
+                          {msg.sendmsg}
+                        </h1>
+                      </div>
                     </div>
+                    <span className="font-popince font-medium text-[12px] text-gray-400">
+                      {liv.gettimenow()}
+                    </span>
                   </div>
-                  <span className="font-popince font-medium text-[12px] text-gray-400">
-                    Today, 2:01pm
-                  </span>
-                </div>
-              ) : (
-                <div className="px-[50px] self-end">
-                  <div className="flex flex-col">
-                    <div className="text-center bg-[#5F35F5] px-6 py-3 rounded-2xl">
-                      <h1 className="font-popince font-medium text-[16px]">
-                        Hellow !
-                      </h1>
+                );
+              } else if (
+                auth.currentUser.uid == msg.whorecivedfriendrequestuid &&
+                value.whosendfriendrequestuid == msg.whosendfriendrequestuid
+              ) {
+                return (
+                  <div className="px-[50px] self-start mt-10">
+                    <div className="flex flex-col">
+                      <div className="text-center bg-[#F1F1F1] px-6 py-3 rounded-2xl">
+                        <h1 className="font-popince font-medium text-[16px]">
+                          {msg.sendmsg}
+                        </h1>
+                      </div>
                     </div>
+                    <span className="font-popince font-medium text-[12px] text-gray-400">
+                      {liv.gettimenow()}
+                    </span>
                   </div>
-                  <span className="font-popince font-medium text-[12px] text-gray-400">
-                    Today, 2:01pm
-                  </span>
-                </div>
-              )
-            )}
+                );
+              } 
+
+                return null;
+              
+            })}
           </div>
           {/* chat view */}
 
