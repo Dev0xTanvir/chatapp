@@ -196,7 +196,28 @@ const Chat = () => {
                 auth.currentUser.uid == msg.whosendfriendrequestuid &&
                 value.whosendfriendrequestuid == msg.whorecivedfriendrequestuid
               ) {
-                return (
+                return Array.isArray(msg.sendmsg) ? (
+                  <div className="px-[50px] self-end">
+                    <div className="flex flex-col">
+                      <div className="text-center bg-[#5F35F5] px-6 py-3 rounded-2xl">
+                        <h1 className="font-popince font-medium text-[16px]">
+                          {msg.sendmsg.map((image) => (
+                            <div class="relative me-4">
+                              <img
+                                class="w-50 h-50 rounded"
+                                src={image}
+                                alt="profile image"
+                              />
+                            </div>
+                          ))}
+                        </h1>
+                      </div>
+                    </div>
+                    <span className="font-popince font-medium text-[12px] text-gray-400">
+                      {liv.gettimenow()}
+                    </span>
+                  </div>
+                ) : (
                   <div className="px-[50px] self-end">
                     <div className="flex flex-col">
                       <div className="text-center bg-[#5F35F5] px-6 py-3 rounded-2xl">
@@ -214,7 +235,28 @@ const Chat = () => {
                 auth.currentUser.uid == msg.whorecivedfriendrequestuid &&
                 value.whosendfriendrequestuid == msg.whosendfriendrequestuid
               ) {
-                return (
+                return Array.isArray(msg.sendmsg) ? (
+                  <div className="px-[50px] self-start mt-10">
+                    <div className="flex flex-col">
+                      <div className="text-center bg-[#F1F1F1] px-6 py-3 rounded-2xl">
+                        <h1 className="font-popince font-medium text-[16px]">
+                          {msg.sendmsg.map((image) => (
+                            <div class="relative me-4">
+                              <img
+                                class="w-50 h-50 rounded"
+                                src={image}
+                                alt="profile image"
+                              />
+                            </div>
+                          ))}
+                        </h1>
+                      </div>
+                    </div>
+                    <span className="font-popince font-medium text-[12px] text-gray-400">
+                      {liv.gettimenow()}
+                    </span>
+                  </div>
+                ) : (
                   <div className="px-[50px] self-start mt-10">
                     <div className="flex flex-col">
                       <div className="text-center bg-[#F1F1F1] px-6 py-3 rounded-2xl">
