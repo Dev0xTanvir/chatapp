@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import lib from "../lib/lib";
+import lib from "../../lib/lib";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
-import auth from "../../Database/FIrebase.config";
+import auth from "../../../Database/FIrebase.config";
 import { FadeLoader } from "react-spinners";
-import regestation from "../assets/Regestation.png";
+import regestation from "../../assets/Regestation.png";
 import { Link } from "react-router";
 import { getDatabase, push, ref, set } from "firebase/database";
 

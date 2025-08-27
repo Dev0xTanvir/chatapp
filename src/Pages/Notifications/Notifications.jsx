@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getDatabase, onValue, ref } from "firebase/database";
 import moment from "moment";
 import SearchBar from "../../SearchBar/SearchBar";
-import NotificationCard from "../NotificationCard/NotificationCard";
+import NotificationCard from "../../Components/NotificationCard/NotificationCard";
 import { getAuth } from "firebase/auth";
 
 

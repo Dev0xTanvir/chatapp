@@ -56,8 +56,6 @@ const useFetch = (dbName = "friend") => {
     fetchData();
   }, [dbName]);
 
-  console.log(groupList);
-
     return groupList;
 };
 

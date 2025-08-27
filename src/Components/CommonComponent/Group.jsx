@@ -37,15 +37,15 @@ const Group = () => {
             >
               <div>
                 <picture>
-                  <img src={group.groupImg || homeimg} alt={homeimg} />
+                  <img src={group?.groupImg || homeimg} alt={homeimg} />
                 </picture>
               </div>
               <div className="py-3">
                 <h1 className="font-popince font-semibold text-[18px]">
-                  {group.groupName}
+                  {group?.groupName}
                 </h1>
                 <p className="font-popince font-medium text-[14px]">
-                  {group.groupTagname}
+                  {group?.groupTagname}
                 </p>
               </div>
               <button className="font-medium font-popince text-[10px]">

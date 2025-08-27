@@ -8,16 +8,18 @@ import { closeModal, openModal } from "../../Utils/Mudal.Utils";
 import { validationFild } from "../../Validation/Validation";
 import { handleinput } from "../../Utils/OnchangeHendeler.Utils";
 import { getAuth } from "firebase/auth";
-import Group from "./Group";
-
+import { getDatabase, onValue, ref } from "firebase/database";
 
 const Grouplist = () => {
   const auth = getAuth();
-  const inputuseref = useRef(null)
+  const db = getDatabase();
+  const inputuseref = useRef(null);
   const [arrayitem, setarrayitem] = useState(10);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [loading, setloading] = useState(false);
+  const [grouplist, setgrouplist] = useState([]);
   const [grouperror, setgrouperror] = useState({});
+  const [joinedGroups, setJoinedGroups] = useState(false);
   const [groupinfo, setgroupinfo] = useState({
     groupName: "",
     groupTagname: "",
@@ -44,7 +46,7 @@ const Grouplist = () => {
 
     try {
       setloading(true);
-      const Url = Uplodefile(formData);
+      const Url = await Uplodefile(formData);
       setFirebasedata("grouplist/", {
         adminname: auth.currentUser.displayName,
         adminUid: auth.currentUser.uid,
@@ -66,13 +68,28 @@ const Grouplist = () => {
       closeModal(setIsOpen);
       if (inputuseref.current) {
         inputuseref.current.value = null;
-      };
-    };
+      }
+    }
   };
 
-  // fetch data from group list
+  // fetch data from group
 
-  
+  useEffect(() => {
+    setloading(true);
+    const usersRef = ref(db, "grouplist");
+    onValue(usersRef, (snapshot) => {
+      const requestBlankarr = [];
+      snapshot.forEach((fruser) => {
+        if (auth?.currentUser?.uid !== fruser?.val()?.whosendfriendrequestuid) {
+          requestBlankarr.push({ ...fruser.val(), fruserkey: fruser.key });
+        }
+      });
+      setgrouplist(requestBlankarr);
+      setloading(false);
+    });
+  }, [auth.currentUser?.uid]);
+
+  // single toogle button
 
   return (
     <div className="px-2">
@@ -134,7 +151,7 @@ const Grouplist = () => {
           </span>
         </div>
         <div className="overflow-y-scroll h-[50vh]">
-          {[...new Array(arrayitem)].map((_, index) => (
+          {grouplist?.map((chatgrouplist, index) => (
             <div
               className={
                 arrayitem - 1 === index
@@ -144,25 +161,29 @@ const Grouplist = () => {
             >
               <div>
                 <picture>
-                  <img src={homeimg} alt={homeimg} />
+                  <img
+                    src={chatgrouplist?.groupImg || homeimg}
+                    alt={chatgrouplist?.groupImg || homeimg}
+                  />
                 </picture>
               </div>
               <div className="py-3">
                 <h1 className="font-popince font-semibold text-[18px]">
-                  Friends Reunion
+                  {chatgrouplist?.groupName}
                 </h1>
                 <p className="font-popince font-medium text-[14px]">
-                  Hi Guys, Wassup!
+                  {chatgrouplist?.groupTagname}
                 </p>
               </div>
-              <button>
-                <button
-                  type="button"
-                  className="focus:outline-none text-white bg-purple-700  font-medium rounded-lg text-sm px-5 py-2.5 mb-2  cursor-pointer"
-                >
-                  Join
-                </button>
+
+              <button
+                type="button"
+                onClick={() => setJoinedGroups(!joinedGroups)}
+                className="focus:outline-none text-white bg-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 cursor-pointer"
+              >
+                {joinedGroups ? "Join" : "Joined"}
               </button>
+
             </div>
           ))}
         </div>
