@@ -7,6 +7,7 @@ import Index from "./Pages/Home/Index";
 import Chat from "./Pages/Chat/Chat";
 import Dark from "./Pages/Dark/Dark";
 import Notifications from "./Pages/Notifications/Notifications";
+import Settings from "./Pages/Settings/Settings";
 
 const App = () => {
   return (
@@ -15,10 +16,10 @@ const App = () => {
         {/* <Dark/> */}
         <Routes>
           <Route path="/" element={<Rootlayout />}>
-            <Route index element={<Index />}></Route>v
+            <Route index element={<Index />}></Route>
             <Route path="/message" element={<Chat />}></Route>
             <Route path="/notification" element={<Notifications />}></Route>
-            <Route path="/setting" element={"this is setting page"}></Route>
+            <Route path="/setting" element={<Settings/>}></Route>
           </Route>
           <Route path="/singup" element={<Singup />} />
           <Route path="/singin" element={<Singin />} />

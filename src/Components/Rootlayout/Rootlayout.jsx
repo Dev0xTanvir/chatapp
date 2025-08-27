@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../Sidebar";
+import Sidebar from "../../Pages/Home/Sidebar";
 import { Outlet } from "react-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Usernotverified from "../../Pages/Error/Usernotverified";

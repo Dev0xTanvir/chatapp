@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import sideimg from "../assets/sideber.png.png";
+import sideimg from "../../assets/sideber.png.png";
 import {
   IoCloudUploadOutline,
   IoHomeOutline,
