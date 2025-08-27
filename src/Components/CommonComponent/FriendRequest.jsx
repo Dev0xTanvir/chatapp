@@ -14,11 +14,11 @@ import { getAuth } from "firebase/auth";
 import moment from "moment";
 import lib from "../../lib/lib";
 const FriendRequest = () => {
-  let db = getDatabase();
-  let auth = getAuth();
-  let [request, setrequest] = useState([]);
-  let [loading, setloading] = useState(false);
-  let [arrayitem, setarrayitem] = useState(10);
+  const db = getDatabase();
+  const auth = getAuth();
+  const [request, setrequest] = useState([]);
+  const [loading, setloading] = useState(false);
+  const [arrayitem, setarrayitem] = useState(10);
 
   useEffect(() => {
     setloading(true);
@@ -42,14 +42,14 @@ const FriendRequest = () => {
 
   // accpect friendrequest function
 
-  let handleaccpetrequest = (acrequest) => {
+  const handleaccpetrequest = (acrequest) => {
     set(push(ref(db, "friend")), {
       ...acrequest,
       createdAt: lib.gettimenow(),
     })
       .then(() => {
         // remove friendrequest id
-        let frrequest = ref(db, `friendrequest/${acrequest.fruserkey}`);
+        const frrequest = ref(db, `friendrequest/${acrequest.fruserkey}`);
         remove(frrequest);
       })
       .then(() => {
@@ -77,11 +77,11 @@ const FriendRequest = () => {
 
   // remove friendrequest
 
-  let handlereject = (fr) => {
-    let areyousure = confirm;
+  const handlereject = (fr) => {
+    const areyousure = confirm;
     if (areyousure) {
       // remove friendrequest id
-      let frrequest = ref(db, `friendrequest/${fr.fruserkey}`);
+      const frrequest = ref(db, `friendrequest/${fr.fruserkey}`);
       remove(frrequest);
     }
   };

@@ -13,11 +13,11 @@ import { getDatabase, ref, onValue, update } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const Sidebar = () => {
-  let db = getDatabase();
-  let navigate = useNavigate();
-  let auth = getAuth();
-  let [userdata, setuserdata] = useState({});
-  let navicon = [
+  const db = getDatabase();
+  const navigate = useNavigate();
+  const auth = getAuth();
+  const [userdata, setuserdata] = useState({});
+  const navicon = [
     {
       id: 1,
       path: "/",
@@ -46,14 +46,14 @@ const Sidebar = () => {
 
   // handle function implement
 
-  let handlelink = (path = "/") => {
+  const handlelink = (path = "/") => {
     navigate(path);
   };
 
   // catch the parms
 
   useEffect(() => {
-    let script = document.createElement("script");
+    const script = document.createElement("script");
     script.src = "https://upload-widget.cloudinary.com/latest/global/all.js";
     script.acync = true;
     document.body.appendChild(script);
@@ -70,10 +70,10 @@ const Sidebar = () => {
    */
 
   useEffect(() => {
-    let fetchdata = () => {
+    const fetchdata = () => {
       const usersRef = ref(db, "users/");
       onValue(usersRef, (snapshot) => {
-        let obj = {};
+        const obj = {};
         snapshot.forEach((item) => {
           if (auth.currentUser.uid === item.val().userid)
             obj = { ...item.val(), userkey: item.key };
@@ -84,7 +84,7 @@ const Sidebar = () => {
     fetchdata();
   }, []);
 
-  let handlepofilepictureuplode = () => {
+  const handlepofilepictureuplode = () => {
     if (window.cloudinary) {
       cloudinary.openUploadWidget(
         {

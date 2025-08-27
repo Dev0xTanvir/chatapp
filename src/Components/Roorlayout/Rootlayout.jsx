@@ -5,8 +5,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Usernotverified from "../../Pages/Error/Usernotverified";
 
 const Rootlayout = () => {
-  let auth = getAuth();
-  let [userverified, setuserverified] = useState(false);
+  const auth = getAuth();
+  const [userverified, setuserverified] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {

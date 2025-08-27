@@ -8,14 +8,14 @@ import lib from "../../lib/lib";
 import { FaUser } from "react-icons/fa";
 
 const User = () => {
-  let [userupdate, setuserupdate] = useState([]);
-  let [login, setuserlogin] = useState({});
-  let [loading, setloading] = useState(false);
-  let [frrequest, setfrrequest] = useState([]);
-  let [frindlist, setfrindlist] = useState([]);
-  let [unfriend, setunfriends] = useState([]);
-  let db = getDatabase();
-  let auth = getAuth();
+  const [userupdate, setuserupdate] = useState([]);
+  const [login, setuserlogin] = useState({});
+  const [loading, setloading] = useState(false);
+  const [frrequest, setfrrequest] = useState([]);
+  const [frindlist, setfrindlist] = useState([]);
+  const [unfriend, setunfriends] = useState([]);
+  const db = getDatabase();
+  const auth = getAuth();
 
   useEffect(() => {
     setloading(true);
@@ -91,7 +91,7 @@ const User = () => {
 
   // user friendrequest function
 
-  let handlefriendrequest = (users) => {
+  const handlefriendrequest = (users) => {
     set(push(ref(db, "friendrequest/")), {
       whosendfriendrequestname:
         login?.username || auth?.currentUser?.displayName,

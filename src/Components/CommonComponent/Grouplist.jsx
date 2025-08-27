@@ -70,6 +70,10 @@ const Grouplist = () => {
     };
   };
 
+  // fetch data from group list
+
+  
+
   return (
     <div className="px-2">
       <div>

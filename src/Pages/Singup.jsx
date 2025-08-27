@@ -13,28 +13,28 @@ import { Link } from "react-router";
 import { getDatabase, push, ref, set } from "firebase/database";
 
 const Singup = () => {
-  let db = getDatabase();
-  let data = lib.singUpData();
-  let { successtost, errortost, infotost } = lib;
+  const db = getDatabase();
+  const data = lib.singUpData();
+  const { successtost, errortost, infotost } = lib;
 
   // ----------normal state----------
 
-  let [email, setemail] = useState("");
-  let [fullname, setfullname] = useState("");
-  let [password, setpassword] = useState("");
-  let [eye, seteye] = useState(false);
-  let [loder, setloder] = useState(false);
+  const [email, setemail] = useState("");
+  const [fullname, setfullname] = useState("");
+  const [password, setpassword] = useState("");
+  const [eye, seteye] = useState(false);
+  const [loder, setloder] = useState(false);
 
   //------error state------------
 
-  let [emailError, setemailError] = useState("");
-  let [fullnameError, setfullnameError] = useState("");
-  let [passwordError, setpasswordError] = useState("");
+  const [emailError, setemailError] = useState("");
+  const [fullnameError, setfullnameError] = useState("");
+  const [passwordError, setpasswordError] = useState("");
 
   // onchange listiner---------
 
-  let handlechange = (event) => {
-    let { name, value } = event.target;
+  const handlechange = (event) => {
+    const { name, value } = event.target;
     if (name == "email") {
       setemail(value);
     } else if (name == "fullname") {
@@ -51,7 +51,7 @@ const Singup = () => {
     return: void
   */
 
-  let handlesingup = () => {
+  const handlesingup = () => {
     if (!email) {
       setemailError("Missing Email");
     } else if (!fullname) {
@@ -69,7 +69,7 @@ const Singup = () => {
               "https://images.pexels.com/photos/20566244/pexels-photo-20566244/free-photo-of-portrait-of-a-beautiful-blonde-peeking-from-behind-a-wall.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load",
           })
             .then(() => {
-              let userdb = ref(db, "users/");
+              const userdb = ref(db, "users/");
               set(push(userdb), {
                 userid: auth.currentUser.uid,
                 username: auth.currentUser.displayName || name,

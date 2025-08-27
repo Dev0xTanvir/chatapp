@@ -13,19 +13,19 @@ import { getDatabase, ref, set, push } from "firebase/database";
 import { Link, useNavigate } from "react-router";
 
 const Singin = () => {
-  let auth = getAuth();
-  let db = getDatabase();
-  let navigate = useNavigate();
-  let [eye, seteye] = useState(false);
-  let [singininfo, setsingininfo] = useState({
+  const auth = getAuth();
+  const db = getDatabase();
+  const navigate = useNavigate();
+  const [eye, seteye] = useState(false);
+  const [singininfo, setsingininfo] = useState({
     email: "",
     password: "",
   });
 
   // onchange listiner
 
-  let handlechange = (event) => {
-    let { name, value } = event.target;
+  const handlechange = (event) => {
+    const { name, value } = event.target;
     setsingininfo({
       ...singininfo,
       [name]: value,
@@ -39,8 +39,8 @@ const Singin = () => {
     return: void
   */
 
-  let handlesingin = () => {
-    let { email, password } = singininfo;
+  const handlesingin = () => {
+    const { email, password } = singininfo;
     signInWithEmailAndPassword(auth, email, password)
       .then((userinfo) => {
         console.log(userinfo);
@@ -60,13 +60,13 @@ const Singin = () => {
 
   // handlegoogle function
 
-  let handlegoogle = () => {
+  const handlegoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log(result);
-        let { user } = result;
-        let userdb = ref(db, "users/");
+        const { user } = result;
+        const userdb = ref(db, "users/");
         set(push(userdb), {
           userid: result?.user?.uid,
           username: result?.user?.displayName,

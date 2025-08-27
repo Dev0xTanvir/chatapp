@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import React from 'react'
-let auth = getAuth()
-let handlemail = () => {
+const auth = getAuth()
+const handlemail = () => {
     if(auth.currentUser.email.split('@')[1].split('.')[0] == 'gmail'){
         window.open('https://mail.google.com/mail/u/0/#inbox', '_blank');
     }else if(auth.currentUser.email.split('@')[1].split('.')[0] == 'outlook'){

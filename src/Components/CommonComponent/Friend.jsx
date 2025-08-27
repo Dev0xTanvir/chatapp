@@ -16,15 +16,15 @@ import Alert from "../Alert/Alert";
 import { friendaction } from "../../fetures/slice/friendSlice";
 import { useDispatch } from "react-redux";
 const Friend = ({ buttonvisible = true }) => {
-  let db = getDatabase();
-  let auth = getAuth();
+  const db = getDatabase();
+  const auth = getAuth();
   const dispatch = useDispatch();
-  let [request, setrequest] = useState([]);
-  let [loading, setloading] = useState(false);
-  let [arrayitem, setarrayitem] = useState(10);
-  let [blockuser, setblockuser] = useState([]);
-  let [unblock, setunblock] = useState([]);
-  let [unfrand, setunfrand] = useState([]);
+  const [request, setrequest] = useState([]);
+  const [loading, setloading] = useState(false);
+  const [arrayitem, setarrayitem] = useState(10);
+  const [blockuser, setblockuser] = useState([]);
+  const [unblock, setunblock] = useState([]);
+  const [unfrand, setunfrand] = useState([]);
 
   useEffect(() => {
     setloading(true);
@@ -47,7 +47,7 @@ const Friend = ({ buttonvisible = true }) => {
 
   // handleblock function implement
 
-  let handleblock = (frinfo = {}) => {
+  const handleblock = (frinfo = {}) => {
     // true false ar aupor base kora block
     // setblock((prev) => {
     //   return !prev;
@@ -88,7 +88,7 @@ const Friend = ({ buttonvisible = true }) => {
 
   // handleunfriend function implement 1
 
-  let handleunfriend = (unfrienduser) => {
+  const handleunfriend = (unfrienduser) => {
     set(push(ref(db, "users")), {
       ...unfrienduser,
       createdAt: lib.gettimenow(),

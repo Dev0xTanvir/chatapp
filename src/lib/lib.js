@@ -1,7 +1,7 @@
 import moment from "moment";
 import { toast, Bounce } from "react-toastify";
 
-let _ = {};
+const _ = {};
 
 _.singUpData = () => {
   let singupitem = [

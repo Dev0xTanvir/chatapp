@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 function Dark() {
-  let [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(false);
   return (
     <div className={`${dark ? "bg-black text-white" : "bg-white text-black"} h-screen`}>
       <div>
